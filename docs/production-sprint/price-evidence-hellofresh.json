@@ -1,0 +1,58 @@
+[
+  {
+    "provider": "hellofresh",
+    "persons": 2,
+    "dinners": 2,
+    "postcode": "0150",
+    "text": "\n2 måltider til 2 personer per uke\n4 porsjoner til 165,00 kr per porsjon\nPris på kasse\n660,00 kr\nLevering\n79,00 kr\nTotalt\n739,00 kr\n"
+  },
+  {
+    "provider": "hellofresh",
+    "persons": 2,
+    "dinners": 3,
+    "postcode": "0150",
+    "text": "\n3 måltider til 2 personer per uke\n6 porsjoner til 128,33 kr per porsjon\nPris på kasse\n770,00 kr\nLevering\n79,00 kr\nTotalt\n849,00 kr\n"
+  },
+  {
+    "provider": "hellofresh",
+    "persons": 2,
+    "dinners": 4,
+    "postcode": "0150",
+    "text": "\n4 måltider til 2 personer per uke\n8 porsjoner til 120,00 kr per porsjon\nPris på kasse\n960,00 kr\nLevering\n79,00 kr\nTotalt\n1 039,00 kr\n"
+  },
+  {
+    "provider": "hellofresh",
+    "persons": 2,
+    "dinners": 5,
+    "postcode": "0150",
+    "text": "\n5 måltider til 2 personer per uke\n10 porsjoner til 115,00 kr per porsjon\nPris på kasse\n1 150,00 kr\nLevering\n79,00 kr\nTotalt\n1 229,00 kr\n"
+  },
+  {
+    "provider": "hellofresh",
+    "persons": 4,
+    "dinners": 2,
+    "postcode": "0150",
+    "text": "\n2 måltider til 4 personer per uke\n8 porsjoner til 111,25 kr per porsjon\nPris på kasse\n890,00 kr\nLevering\n79,00 kr\nTotalt\n969,00 kr\n"
+  },
+  {
+    "provider": "hellofresh",
+    "persons": 4,
+    "dinners": 3,
+    "postcode": "0150",
+    "text": "\n3 måltider til 4 personer per uke\n12 porsjoner til 88,33 kr per porsjon\nPris på kasse\n1 060,00 kr\nLevering\n79,00 kr\nTotalt\n1 139,00 kr\n"
+  },
+  {
+    "provider": "hellofresh",
+    "persons": 4,
+    "dinners": 4,
+    "postcode": "0150",
+    "text": "\n4 måltider til 4 personer per uke\n16 porsjoner til 79,38 kr per porsjon\nPris på kasse\n1 270,00 kr\nLevering\n79,00 kr\nTotalt\n1 349,00 kr\n"
+  },
+  {
+    "provider": "hellofresh",
+    "persons": 4,
+    "dinners": 5,
+    "postcode": "0150",
+    "text": "\n5 måltider til 4 personer per uke\n20 porsjoner til 72,00 kr per porsjon\nPris på kasse\n1 440,00 kr\nLevering\n79,00 kr\nTotalt\n1 519,00 kr\n"
+  }
+]

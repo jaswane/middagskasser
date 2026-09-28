@@ -1,0 +1,13 @@
+[
+  [
+    "event",
+    "sibling_site_click",
+    {
+      "placement": "sibling_section",
+      "page": "/",
+      "direction": "middagskasser_to_middagen",
+      "page_location": "http://127.0.0.1:3102/",
+      "page_referrer": ""
+    }
+  ]
+]

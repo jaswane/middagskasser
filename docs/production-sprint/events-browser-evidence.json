@@ -1,0 +1,145 @@
+[
+  [
+    "consent",
+    "default",
+    {
+      "analytics_storage": "denied",
+      "ad_storage": "denied",
+      "ad_user_data": "denied",
+      "ad_personalization": "denied"
+    }
+  ],
+  [
+    "consent",
+    "update",
+    {
+      "analytics_storage": "granted"
+    }
+  ],
+  [
+    "js",
+    "2026-09-28T19:41:58.567Z"
+  ],
+  [
+    "config",
+    "G-QATEST1234",
+    {
+      "send_page_view": false,
+      "allow_google_signals": false,
+      "allow_ad_personalization_signals": false,
+      "page_location": "http://127.0.0.1:3102/",
+      "page_referrer": "",
+      "cookie_expires": 15552000,
+      "cookie_update": false
+    }
+  ],
+  [
+    "event",
+    "page_view",
+    {
+      "page_path": "/",
+      "page_location": "http://127.0.0.1:3102/",
+      "page_referrer": ""
+    }
+  ],
+  [
+    "event",
+    "comparison_view",
+    {
+      "page": "/",
+      "placement": "comparison",
+      "page_location": "http://127.0.0.1:3102/",
+      "page_referrer": ""
+    }
+  ],
+  [
+    "event",
+    "page_view",
+    {
+      "page_path": "/finn-matkasse",
+      "page_location": "http://127.0.0.1:3102/finn-matkasse",
+      "page_referrer": ""
+    }
+  ],
+  [
+    "event",
+    "selector_start",
+    {
+      "placement": "selector_page",
+      "page": "/finn-matkasse",
+      "page_location": "http://127.0.0.1:3102/finn-matkasse",
+      "page_referrer": ""
+    }
+  ],
+  [
+    "event",
+    "selector_answer",
+    {
+      "step": "people",
+      "answer_id": "4",
+      "page_location": "http://127.0.0.1:3102/finn-matkasse",
+      "page_referrer": ""
+    }
+  ],
+  [
+    "event",
+    "selector_answer",
+    {
+      "step": "meals",
+      "answer_id": "4",
+      "page_location": "http://127.0.0.1:3102/finn-matkasse",
+      "page_referrer": ""
+    }
+  ],
+  [
+    "event",
+    "selector_answer",
+    {
+      "step": "priority",
+      "answer_id": "price",
+      "page_location": "http://127.0.0.1:3102/finn-matkasse",
+      "page_referrer": ""
+    }
+  ],
+  [
+    "event",
+    "selector_complete",
+    {
+      "result_type": "shared_or_uncertain",
+      "method_version": "2026-09-28",
+      "page_location": "http://127.0.0.1:3102/finn-matkasse",
+      "page_referrer": ""
+    }
+  ],
+  [
+    "event",
+    "page_view",
+    {
+      "page_path": "/hellofresh",
+      "page_location": "http://127.0.0.1:3102/hellofresh",
+      "page_referrer": ""
+    }
+  ],
+  [
+    "event",
+    "provider_view",
+    {
+      "provider": "hellofresh",
+      "page": "/hellofresh",
+      "page_location": "http://127.0.0.1:3102/hellofresh",
+      "page_referrer": ""
+    }
+  ],
+  [
+    "event",
+    "affiliate_click",
+    {
+      "provider": "hellofresh",
+      "placement": "provider_bottom",
+      "page": "/hellofresh",
+      "offer_type": "none",
+      "page_location": "http://127.0.0.1:3102/hellofresh",
+      "page_referrer": ""
+    }
+  ]
+]
