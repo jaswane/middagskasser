@@ -444,18 +444,14 @@ function Contact() {
 }
 function Privacy() {
   const ready =
-    process.env.PRIVACY_CONTROLLER &&
-    process.env.PRIVACY_OPERATIONS &&
-    process.env.PRIVACY_CONTACT_RETENTION;
+    process.env.PRIVACY_OPERATIONS && process.env.PRIVACY_CONTACT_RETENTION;
   return (
     <div className="prose">
       <h2>Når du bruker velgeren</h2>
-      {process.env.PRIVACY_CONTROLLER && (
-        <p>
-          Behandlingsansvarlig: {process.env.PRIVACY_CONTROLLER}.{" "}
-          <Link href="/kontakt">Kontakt oss om personvern</Link>.
-        </p>
-      )}
+      <p>
+        Behandlingsansvarlig: Swane Creative ENK, org.nr. 917 248 834.{" "}
+        <Link href="/kontakt">Kontakt oss om personvern</Link>.
+      </p>
       <p>
         Svarene behandles i nettleseren mens siden er åpen. Vi oppretter ingen
         konto eller lagret profil, og ber ikke om navn, adresse eller sensitive
@@ -518,6 +514,15 @@ function Privacy() {
       </p>
       <h2>Når du går videre</h2>
       <p>
+        Knappene videre til Godtlevert og HelloFresh går foreløpig via
+        eButikker.no. Når du klikker, forlater du Middagskasser.no, og da
+        gjelder{" "}
+        <a href="https://www.ebutikker.no/personvernerklaering/">
+          personvernerklæringen
+        </a>{" "}
+        og bruken av informasjonskapsler hos eButikker.no.
+      </p>
+      <p>
         Leverandører og eventuelt affiliatenettverket har egne vilkår for
         personvern. Se også{" "}
         <Link href="/annonselenker">hvordan annonselenker fungerer</Link>.
@@ -525,8 +530,7 @@ function Privacy() {
       {!ready && (
         <p className="neutral-note">
           Denne forhåndsvisningen er ikke klar for offentlig lansering.
-          Opplysninger om behandlingsansvarlig, drift og lagring må bekreftes
-          først.
+          Opplysninger om drift og lagring må bekreftes først.
         </p>
       )}
     </div>

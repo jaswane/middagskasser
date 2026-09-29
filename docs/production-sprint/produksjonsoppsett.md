@@ -8,8 +8,7 @@ Bruk `.env.example` som mal i valgt verts miljøvariabler. Faktiske sporingslenk
 
 - `NEXT_PUBLIC_SITE_URL=https://middagskasser.no`
 - `NEXT_PUBLIC_GA_ID`: reell G-ID fra riktig GA4-datastrøm.
-- `HELLOFRESH_AFFILIATE_URL` og `GODTLEVERT_AFFILIATE_URL`: godkjente HTTPS-lenker fra eget Adtraction-program, på `track.adtraction.com` eller `adtr.co`.
-- `PRIVACY_CONTROLLER`: bekreftet juridisk navn og organisasjonsnummer.
+- `HELLOFRESH_AFFILIATE_URL` og `GODTLEVERT_AFFILIATE_URL`: valgfrie. Tomme verdier gir den godkjente eButikker.no-fallbacken. En satt verdi må være en godkjent HTTPS-lenke fra eget Adtraction-program, på `track.adtraction.com` eller `adtr.co`, ellers gir lanseringskontrollen NO-GO.
 - `PRIVACY_OPERATIONS`: ferdig godkjent tekst om drifts- og e-postleverandør, databehandlere, behandlingssted, tekniske logger, formål, grunnlag, lagring og overføringsgrunnlag utenfor EØS, også for Google der aktuelt.
 - `PRIVACY_CONTACT_RETENTION`: faktisk lagringstid og behandlingsgrunnlag for kontaktmeldinger.
 - `GA_RETENTION_MONTHS`: 2 eller 14, identisk med innstillingen i GA4. Slå av forlengelse ved ny aktivitet hvis den beskrevne fristen skal gjelde.

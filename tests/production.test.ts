@@ -153,20 +153,58 @@ test("missing or unsafe affiliate configuration falls back to the plain eButikke
 });
 test("production launch cannot silently use absent legal or commercial configuration", () => {
   const empty = launchErrors({});
-  assert.ok(empty.length >= 8);
+  assert.equal(empty.length, 6);
+  // Launch without affiliate URLs uses the approved eButikker.no fallback.
   const configured = {
     NEXT_PUBLIC_SITE_URL: "https://middagskasser.no",
     NEXT_PUBLIC_GA_ID: "G-QATEST1234",
-    HELLOFRESH_AFFILIATE_URL: "https://adtr.co/test-h",
-    GODTLEVERT_AFFILIATE_URL: "https://adtr.co/test-g",
-    PRIVACY_CONTROLLER: "QA fixture only",
     PRIVACY_OPERATIONS: "QA fixture only",
     PRIVACY_CONTACT_RETENTION: "QA fixture only",
     GA_RETENTION_MONTHS: "2",
     LAUNCH_VERIFIED: "true",
   };
   assert.deepEqual(launchErrors(configured), []);
+  assert.deepEqual(
+    launchErrors({
+      ...configured,
+      HELLOFRESH_AFFILIATE_URL: " ",
+      GODTLEVERT_AFFILIATE_URL: "",
+    }),
+    [],
+  );
+  assert.deepEqual(
+    launchErrors({
+      ...configured,
+      HELLOFRESH_AFFILIATE_URL: "https://adtr.co/test-h",
+      GODTLEVERT_AFFILIATE_URL: "https://track.adtraction.com/t/t?a=1",
+    }),
+    [],
+  );
   assert.ok(launchErrors({ ...configured, LAUNCH_VERIFIED: "false" }).length);
+});
+test("an affiliate URL that is set must still be a valid Adtraction link", () => {
+  const configured = {
+    NEXT_PUBLIC_SITE_URL: "https://middagskasser.no",
+    NEXT_PUBLIC_GA_ID: "G-QATEST1234",
+    PRIVACY_OPERATIONS: "QA fixture only",
+    PRIVACY_CONTACT_RETENTION: "QA fixture only",
+    GA_RETENTION_MONTHS: "2",
+    LAUNCH_VERIFIED: "true",
+  };
+  for (const value of [
+    "not a url",
+    "http://adtr.co/x",
+    "https://www.ebutikker.no/nettbutikkside/godtlevert/",
+    "https://track.adtraction.com.evil.invalid/",
+    "https://user:password@adtr.co/x",
+  ]) {
+    const errors = launchErrors({
+      ...configured,
+      GODTLEVERT_AFFILIATE_URL: value,
+    });
+    assert.equal(errors.length, 1, value);
+    assert.match(errors[0], /^GODTLEVERT_AFFILIATE_URL:/);
+  }
 });
 test("indexable route list and social metadata stay within the approved scope", () => {
   assert.equal(indexablePaths.length, 9);
