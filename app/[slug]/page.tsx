@@ -69,7 +69,7 @@ const pages: Record<
   personvern: {
     title: "Personvern og dine valg",
     description:
-      "Hva som behandles når du bruker Middagskasser.no, og hvordan du styrer valgfri statistikk.",
+      "Hvem som er ansvarlig for opplysningene dine, hvordan drift og e-post håndteres, og hva som gjelder når du går videre til eButikker.no.",
     eyebrow: "PERSONVERN",
   },
   designoversikt: {
