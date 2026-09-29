@@ -134,7 +134,7 @@ test("affiliate redirects support both partners and every placement without untr
   );
   assert.equal(short.searchParams.get("epi"), "hellofresh_comparison");
 });
-test("missing or unsafe affiliate configuration falls back to a plain official link", () => {
+test("missing or unsafe affiliate configuration falls back to the plain eButikker.no page", () => {
   for (const value of [
     "",
     "javascript:alert(1)",
@@ -144,7 +144,10 @@ test("missing or unsafe affiliate configuration falls back to a plain official l
   ]) {
     assert.deepEqual(
       destination("hellofresh", { HELLOFRESH_AFFILIATE_URL: value }),
-      { affiliate: false, url: "https://www.hellofresh.no/" },
+      {
+        affiliate: false,
+        url: "https://www.ebutikker.no/nettbutikkside/hellofresh/",
+      },
     );
   }
 });

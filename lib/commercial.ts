@@ -1,8 +1,10 @@
 import type { ProviderId } from "./data";
 // Commercial configuration stays server-side, separate from editorial facts and scoring.
-const official: Record<ProviderId, string> = {
-  hellofresh: "https://www.hellofresh.no/",
-  godtlevert: "https://www.godtlevert.no/",
+// Plain fallback until direct affiliate links are approved: our own eButikker.no
+// provider pages. Fact sources in lib/data.ts keep pointing to the providers.
+const fallback: Record<ProviderId, string> = {
+  hellofresh: "https://www.ebutikker.no/nettbutikkside/hellofresh/",
+  godtlevert: "https://www.ebutikker.no/nettbutikkside/godtlevert/",
 };
 export function destination(
   id: ProviderId,
@@ -24,7 +26,7 @@ export function destination(
         return { url: u.toString(), affiliate: true };
     } catch {}
   }
-  return { url: official[id], affiliate: false };
+  return { url: fallback[id], affiliate: false };
 }
 export function redirectTarget(
   id: ProviderId,

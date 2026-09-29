@@ -52,7 +52,7 @@ Produksjonsserver: `npm.cmd run start` etter et vellykket bygg. Domenet krever e
 
 ## Før offentlig lansering
 
-Behold `NEXT_PUBLIC_INDEXABLE=false` til lanseringslisten er gjennomført. Sett ikke inn en GA4-ID før samtykke og faktisk nettverkstrafikk er testet og personvernteksten er ferdigstilt. Affiliate-URL-er er tomme: knapper går til leverandørenes vanlige sider. Bekreft reelle Adtraction-lenker, EPI-felt og gjeldende vilkår før aktivering. Ingen provisjonssatser ligger i prototypens data eller matcher.
+Behold `NEXT_PUBLIC_INDEXABLE=false` til lanseringslisten er gjennomført. Sett ikke inn en GA4-ID før samtykke og faktisk nettverkstrafikk er testet og personvernteksten er ferdigstilt. Affiliate-URL-er er tomme: knappene går via `/go/` til leverandørsidene på eButikker.no og heter «Til <leverandør> via eButikker.no». Bekreft reelle Adtraction-lenker, EPI-felt og gjeldende vilkår før aktivering. Ingen provisjonssatser ligger i prototypens data eller matcher.
 
 Middagen.no sitt eksisterende design kunne ikke hentes. Familieutkastet på `/designoversikt` er et forslag, som må avstemmes mot den faktiske søstersiden.
 

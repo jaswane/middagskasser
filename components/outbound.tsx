@@ -31,7 +31,8 @@ export function Outbound({
           })
         }
       >
-        Se pris hos {name}
+        {/* Without a direct affiliate link, /go/ lands on eButikker.no, not the provider. */}
+        {affiliate ? `Se pris hos ${name}` : `Til ${name} via eButikker.no`}
         <ArrowUpRight size={16} />
       </a>
     </div>

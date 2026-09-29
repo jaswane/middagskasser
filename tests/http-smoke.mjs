@@ -89,8 +89,17 @@ for (const id of ["hellofresh", "godtlevert"]) {
     { redirect: "manual" },
   );
   assert.equal(r.status, 302);
-  assert.equal(r.headers.get("location"), `https://www.${id}.no/`);
+  assert.equal(
+    r.headers.get("location"),
+    `https://www.ebutikker.no/nettbutikkside/${id}/`,
+  );
   assert.match(r.headers.get("x-robots-tag"), /noindex/);
+  assert.equal(r.headers.get("cache-control"), "no-store");
+  // Provider CTAs go through /go/ as plain links; without direct affiliate
+  // links they are neither sponsored nor labelled as ads.
+  const page = await (await fetch(base + `/${id}`)).text();
+  assert.match(page, new RegExp(`href="/go/${id}\\?placement=`));
+  assert.ok(!page.includes('rel="sponsored'), `No sponsored rel: /${id}`);
 }
 assert.equal(
   (await fetch(base + "/go/evil", { redirect: "manual" })).status,

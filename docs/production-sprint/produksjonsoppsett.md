@@ -24,7 +24,7 @@ Sentral konfigurasjon i `lib/commercial.ts`. Eksisterende `/go/hellofresh` og `/
 
 EPI er `<provider>_<placement>`; tillatte plasseringer er `comparison`, `selector_result` og `provider_bottom`. Ukjent/manglende plassering blir `direct`. Ingen brukerdata legges til. Eventuell Adtraction-deeplinkparameter `url` beholdes sist, som dokumentert av [Adtraction](https://help.adtraction.com/en/articles/1563109-get-started-with-epi).
 
-Tom eller ugyldig konfigurasjon gir vanlig offisiell leverandørlenke og ingen annonsemerking. Aktive annonselenker får `rel="sponsored nofollow"`, synlig tekst ved knappen og forklaring med navngitte partnere før første kommersielle lenke. Alle landingssider henter flaggene dynamisk. Kommersiell konfigurasjon brukes ikke av vurderingsfunksjonen.
+Tom eller ugyldig konfigurasjon gir en vanlig lenke til leverandørsiden på eButikker.no (`lib/commercial.ts`), knappeteksten «Til <leverandør> via eButikker.no» og ingen annonsemerking. Aktive annonselenker får `rel="sponsored nofollow"`, synlig tekst ved knappen og forklaring med navngitte partnere før første kommersielle lenke. Alle landingssider henter flaggene dynamisk. Kommersiell konfigurasjon brukes ikke av vurderingsfunksjonen.
 
 ## GA4 og samtykke
 
