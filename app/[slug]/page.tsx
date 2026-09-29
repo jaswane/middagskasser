@@ -360,6 +360,12 @@ function Affiliate() {
         knapper får teksten «Annonselenke» synlig ved knappen og teknisk merking
         for søkemotorer.
       </p>
+      <p>
+        Knappene videre til Godtlevert og HelloFresh går foreløpig via
+        eButikker.no, som også drives av Swane Creative. eButikker.no kan
+        inneholde annonselenker, og vi kan motta provisjon dersom du går videre
+        og handler.
+      </p>
       <h2>Du skal få verdi før du klikker</h2>
       <p>
         Sammenligning, prisgrunnlag og begrensninger vises før
