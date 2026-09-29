@@ -153,17 +153,24 @@ test("missing or unsafe affiliate configuration falls back to the plain eButikke
 });
 test("production launch cannot silently use absent legal or commercial configuration", () => {
   const empty = launchErrors({});
-  assert.equal(empty.length, 6);
-  // Launch without affiliate URLs uses the approved eButikker.no fallback.
+  assert.equal(empty.length, 4);
+  // Launch without analytics, and without affiliate URLs (eButikker.no fallback).
   const configured = {
     NEXT_PUBLIC_SITE_URL: "https://middagskasser.no",
-    NEXT_PUBLIC_GA_ID: "G-QATEST1234",
     PRIVACY_OPERATIONS: "QA fixture only",
     PRIVACY_CONTACT_RETENTION: "QA fixture only",
-    GA_RETENTION_MONTHS: "2",
     LAUNCH_VERIFIED: "true",
   };
   assert.deepEqual(launchErrors(configured), []);
+  assert.deepEqual(launchErrors({ ...configured, NEXT_PUBLIC_GA_ID: " " }), []);
+  assert.deepEqual(
+    launchErrors({
+      ...configured,
+      NEXT_PUBLIC_GA_ID: "G-QATEST1234",
+      GA_RETENTION_MONTHS: "14",
+    }),
+    [],
+  );
   assert.deepEqual(
     launchErrors({
       ...configured,
@@ -182,13 +189,42 @@ test("production launch cannot silently use absent legal or commercial configura
   );
   assert.ok(launchErrors({ ...configured, LAUNCH_VERIFIED: "false" }).length);
 });
+test("a GA4 ID that is set must be valid and have a confirmed retention", () => {
+  const configured = {
+    NEXT_PUBLIC_SITE_URL: "https://middagskasser.no",
+    PRIVACY_OPERATIONS: "QA fixture only",
+    PRIVACY_CONTACT_RETENTION: "QA fixture only",
+    LAUNCH_VERIFIED: "true",
+  };
+  for (const value of ["UA-12345-1", "G-", "g-qatest1234", "G-QATEST1234 "]) {
+    const errors = launchErrors({
+      ...configured,
+      NEXT_PUBLIC_GA_ID: value,
+      GA_RETENTION_MONTHS: "2",
+    });
+    assert.equal(errors.length, 1, value);
+    assert.match(errors[0], /^NEXT_PUBLIC_GA_ID:/);
+  }
+  for (const retention of [undefined, "", "6"]) {
+    const errors = launchErrors({
+      ...configured,
+      NEXT_PUBLIC_GA_ID: "G-QATEST1234",
+      GA_RETENTION_MONTHS: retention,
+    });
+    assert.equal(errors.length, 1, String(retention));
+    assert.match(errors[0], /GA4-lagringstid/);
+  }
+  // Retention alone does not require or enable analytics.
+  assert.deepEqual(
+    launchErrors({ ...configured, GA_RETENTION_MONTHS: "2" }),
+    [],
+  );
+});
 test("an affiliate URL that is set must still be a valid Adtraction link", () => {
   const configured = {
     NEXT_PUBLIC_SITE_URL: "https://middagskasser.no",
-    NEXT_PUBLIC_GA_ID: "G-QATEST1234",
     PRIVACY_OPERATIONS: "QA fixture only",
     PRIVACY_CONTACT_RETENTION: "QA fixture only",
-    GA_RETENTION_MONTHS: "2",
     LAUNCH_VERIFIED: "true",
   };
   for (const value of [

@@ -445,6 +445,7 @@ function Contact() {
 function Privacy() {
   const ready =
     process.env.PRIVACY_OPERATIONS && process.env.PRIVACY_CONTACT_RETENTION;
+  const analytics = validGaId(process.env.NEXT_PUBLIC_GA_ID);
   return (
     <div className="prose">
       <h2>Når du bruker velgeren</h2>
@@ -457,46 +458,62 @@ function Privacy() {
         konto eller lagret profil, og ber ikke om navn, adresse eller sensitive
         opplysninger.
       </p>
-      <h2>Statistikk er valgfritt</h2>
-      <p>
-        {validGaId(process.env.NEXT_PUBLIC_GA_ID)
-          ? "Hvis du samtykker, brukes Google Analytics 4 til å måle sidevisninger og bruk av velger og lenker. Målingen sendes ikke før samtykke."
-          : "Valgfri besøksstatistikk er ikke aktivert. Ingen Google Analytics-kode lastes inn."}{" "}
-        Avvisning skal være like lett som aksept.
-      </p>
-      <p>
-        Ved samtykke mottar Google tekniske nettleseropplysninger og hendelser
-        om sidevisninger, valgte porsjoner, middager, prioritet og lenkeklikk.
-        Vi sender ikke navn, e-post, postnummer, fritekst, søkeparametre eller
-        nettadressen du kom fra. Vi bruker ikke Google Signals eller
-        annonsepersonalisering. Behandlingsgrunnlaget for statistikken er
-        samtykke.
-      </p>
-      <p>
-        GA-informasjonskapslene «_ga» og «_ga_…» kan skille mellom besøk og
-        økter. De får maksimalt 180 dagers levetid hos oss.{" "}
-        {process.env.GA_RETENTION_MONTHS
-          ? `Hendelses- og brukerdata beholdes i ${process.env.GA_RETENTION_MONTHS} måneder i GA4. Aggregerte rapporter kan beholdes lenger.`
-          : "Lagringstid i GA4 må bekreftes før statistikken aktiveres offentlig."}{" "}
-        Google kan behandle opplysninger utenfor EØS.{" "}
-        <a href="https://policies.google.com/technologies/partner-sites?hl=no">
-          Les hvordan Google behandler opplysninger
-        </a>
-        .
-      </p>
-      <ConsentSettings />
-      <h2>Lokalt lagret valg</h2>
-      <p>
-        Når statistikk er tilgjengelig, kan valget ditt lagres lokalt under
-        «middagskasser-statistikk» i inntil 180 dager. Deretter ber vi om et
-        nytt valg. Selve velgersvarene lagres ikke der. Bildet og skrifttypene
-        hentes uten eksterne font- eller bildesporere.
-      </p>
+      {analytics ? (
+        <>
+          <h2>Statistikk er valgfritt</h2>
+          <p>
+            Hvis du samtykker, brukes Google Analytics 4 til å måle
+            sidevisninger og bruk av velger og lenker. Målingen sendes ikke før
+            samtykke. Avvisning skal være like lett som aksept.
+          </p>
+          <p>
+            Ved samtykke mottar Google tekniske nettleseropplysninger og
+            hendelser om sidevisninger, valgte porsjoner, middager, prioritet og
+            lenkeklikk. Vi sender ikke navn, e-post, postnummer, fritekst,
+            søkeparametre eller nettadressen du kom fra. Vi bruker ikke Google
+            Signals eller annonsepersonalisering. Behandlingsgrunnlaget for
+            statistikken er samtykke.
+          </p>
+          <p>
+            GA-informasjonskapslene «_ga» og «_ga_…» kan skille mellom besøk og
+            økter. De får maksimalt 180 dagers levetid hos oss.{" "}
+            {process.env.GA_RETENTION_MONTHS
+              ? `Hendelses- og brukerdata beholdes i ${process.env.GA_RETENTION_MONTHS} måneder i GA4. Aggregerte rapporter kan beholdes lenger.`
+              : "Lagringstid i GA4 må bekreftes før statistikken aktiveres offentlig."}{" "}
+            Google kan behandle opplysninger utenfor EØS.{" "}
+            <a href="https://policies.google.com/technologies/partner-sites?hl=no">
+              Les hvordan Google behandler opplysninger
+            </a>
+            .
+          </p>
+          <ConsentSettings />
+          <h2>Lokalt lagret valg</h2>
+          <p>
+            Valget ditt lagres lokalt under «middagskasser-statistikk» i inntil
+            180 dager. Deretter ber vi om et nytt valg. Selve velgersvarene
+            lagres ikke der. Bildet og skrifttypene hentes uten eksterne font-
+            eller bildesporere.
+          </p>
+        </>
+      ) : (
+        <>
+          <h2>Ingen besøksstatistikk</h2>
+          <p>
+            Google Analytics er ikke aktivert per nå. Vi laster ingen
+            statistikkverktøy, setter ingen informasjonskapsler for statistikk
+            og lagrer ingen samtykkevalg i nettleseren din. Bildet og
+            skrifttypene hentes uten eksterne font- eller bildesporere. Hvis vi
+            tar i bruk statistikk senere, ber vi om samtykke først og oppdaterer
+            denne siden.
+          </p>
+        </>
+      )}
       <h2>Teknisk drift og kontakt</h2>
       <p>
         {process.env.PRIVACY_OPERATIONS ||
           "Driftsleverandør, tilgangslogger, databehandlere og eventuelle overføringer må bekreftes før offentlig lansering."}{" "}
-        E-post som du sender til oss, behandles for å svare på henvendelsen.{" "}
+        E-post som du sender til oss, behandles for å svare på henvendelsen.
+        E-posttjenesten vår leveres av Domeneshop AS.{" "}
         {process.env.PRIVACY_CONTACT_RETENTION ||
           "Lagringstid og behandlingsgrunnlag for henvendelser må bekreftes før offentlig lansering."}{" "}
         <Link href="/kontakt">Kontakt Swane Creative</Link> ved spørsmål om
@@ -504,9 +521,10 @@ function Privacy() {
       </p>
       <p>
         Du kan be om innsyn, retting, sletting eller begrensning, og der
-        vilkårene er oppfylt protestere eller be om dataportabilitet. Du kan
-        trekke tilbake samtykket uten at det påvirker lovligheten av tidligere
-        behandling. Du kan også{" "}
+        vilkårene er oppfylt protestere eller be om dataportabilitet.{" "}
+        {analytics &&
+          "Du kan trekke tilbake samtykket uten at det påvirker lovligheten av tidligere behandling. "}
+        Du kan også{" "}
         <a href="https://www.datatilsynet.no/om-datatilsynet/kontakt-oss/klage-til-datatilsynet/">
           klage til Datatilsynet
         </a>
