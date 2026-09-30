@@ -31,19 +31,61 @@ const LARGE = { rx: 14, scale: 2, stroke: 2 };
 const TOUCH = { rx: 0, scale: 2, stroke: 2 };
 const icon = (spec) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">${tile(spec)}</svg>`;
+const png = (svg, size) =>
+  sharp(Buffer.from(svg), { density: (72 * size * 8) / 64 })
+    .resize(size, size)
+    .png({ compressionLevel: 9 })
+    .toBuffer();
+// ICO container with PNG-encoded entries (supported by all current browsers).
+function ico(images) {
+  const header = Buffer.alloc(6 + 16 * images.length);
+  header.writeUInt16LE(0, 0);
+  header.writeUInt16LE(1, 2);
+  header.writeUInt16LE(images.length, 4);
+  let offset = header.length;
+  images.forEach(({ size, data }, i) => {
+    const entry = 6 + 16 * i;
+    header.writeUInt8(size, entry);
+    header.writeUInt8(size, entry + 1);
+    header.writeUInt16LE(1, entry + 4);
+    header.writeUInt16LE(32, entry + 6);
+    header.writeUInt32LE(data.length, entry + 8);
+    header.writeUInt32LE(offset, entry + 12);
+    offset += data.length;
+  });
+  return Buffer.concat([header, ...images.map((image) => image.data)]);
+}
 
 (async () => {
   const favicon = icon(SMALL);
+  const touch = await sharp(Buffer.from(icon(TOUCH)), { density: 405 })
+    .resize(180, 180)
+    .flatten({ background: BLUE })
+    .png({ compressionLevel: 9 })
+    .toBuffer();
+
+  // Next.js file-based icons: served with a content hash in the URL, so a
+  // changed icon gets a new URL and browsers cannot keep showing an old one.
+  fs.writeFileSync("app/icon.svg", favicon + "\n");
+  fs.writeFileSync("app/apple-icon.png", touch);
+  const sizes = [16, 32, 48];
+  fs.writeFileSync(
+    "app/favicon.ico",
+    ico(
+      await Promise.all(
+        sizes.map(async (size) => ({ size, data: await png(favicon, size) })),
+      ),
+    ),
+  );
+
+  // Unadvertised copies at the old public URLs, kept for pages or bookmarks
+  // cached before the switch. They show the same symbol.
   fs.writeFileSync("public/favicon.svg", favicon + "\n");
   await sharp(Buffer.from(favicon), { density: 288 })
     .resize(32, 32)
     .png({ compressionLevel: 9 })
     .toFile("public/favicon-32.png");
-  await sharp(Buffer.from(icon(TOUCH)), { density: 405 })
-    .resize(180, 180)
-    .flatten({ background: BLUE })
-    .png({ compressionLevel: 9 })
-    .toFile("public/apple-touch-icon.png");
+  fs.writeFileSync("public/apple-touch-icon.png", touch);
 
   // Sharing image: unchanged layout; the brand tile at 70,76 (68×68) uses the same symbol.
   const og =
@@ -56,7 +98,14 @@ const icon = (spec) =>
     `<text x="70" y="512" font-family="Arial" font-size="30" fill="${BLUE}">HelloFresh og Godtlevert · samme kriterier</text>` +
     "</svg>";
   await sharp(Buffer.from(og)).png().toFile("public/og.png");
+  const ogVersion = require("node:crypto")
+    .createHash("sha256")
+    .update(fs.readFileSync("public/og.png"))
+    .digest("hex")
+    .slice(0, 8);
   console.log(
-    "Wrote favicon.svg, favicon-32.png, apple-touch-icon.png and og.png",
+    "Wrote app/favicon.ico, app/icon.svg, app/apple-icon.png, the public copies and og.png.",
   );
+  // Social networks cache the image per URL; tests/production.test.ts checks this value.
+  console.log(`og.png version for lib/seo.ts: /og.png?v=${ogVersion}`);
 })();

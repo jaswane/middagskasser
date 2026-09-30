@@ -11,6 +11,10 @@ export const indexablePaths = [
   "/personvern",
   "/annonselenker",
 ];
+// Social networks cache the sharing image per URL. The version is the first 8
+// hex characters of the SHA-256 of public/og.png (printed by
+// docs/production-sprint/generate-brand-assets.cjs and checked by a test).
+export const ogImage = "/og.png?v=0f281426";
 export function pageMetadata(
   path: string,
   title: string,
@@ -30,7 +34,7 @@ export function pageMetadata(
       type: "website",
       images: [
         {
-          url: "/og.png",
+          url: ogImage,
           width: 1200,
           height: 630,
           alt: "Middagskasser.no – Hvilken matkasse passer dere?",
@@ -41,7 +45,7 @@ export function pageMetadata(
       card: "summary_large_image",
       title: fullTitle,
       description,
-      images: ["/og.png"],
+      images: [ogImage],
     },
   };
 }

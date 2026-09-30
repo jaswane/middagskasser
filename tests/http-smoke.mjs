@@ -14,6 +14,7 @@ const routes = [
   "/designoversikt",
 ];
 const internal = new Set();
+const announcedIcons = new Set();
 for (const path of routes) {
   const r = await fetch(base + path);
   assert.equal(r.status, 200, path);
@@ -31,10 +32,37 @@ for (const path of routes) {
   );
   assert.match(
     html,
-    /property="og:image" content="https:\/\/middagskasser.no\/og.png"/,
+    /property="og:image" content="https:\/\/middagskasser.no\/og.png\?v=[0-9a-f]{8}"/,
     path,
   );
-  assert.match(html, /rel="apple-touch-icon"/, path);
+  // Icons come only from file-based metadata, with a content hash in the URL.
+  const icons = [
+    ...html.matchAll(
+      /<link rel="(?:icon|apple-touch-icon|shortcut icon)"[^>]*href="([^"]+)"/g,
+    ),
+  ].map((m) => m[1].replaceAll("&amp;", "&"));
+  assert.ok(
+    icons.some((href) => /^\/icon\.svg\?/.test(href)),
+    `SVG icon: ${path}`,
+  );
+  assert.ok(
+    icons.some((href) => /^\/favicon\.ico/.test(href)),
+    `ICO: ${path}`,
+  );
+  assert.ok(
+    icons.some((href) => /^\/apple-icon\.png\?/.test(href)),
+    `Apple icon: ${path}`,
+  );
+  for (const old of [
+    "/favicon.svg",
+    "/favicon-32.png",
+    "/apple-touch-icon.png",
+  ])
+    assert.ok(
+      !icons.includes(old),
+      `Old icon URL advertised: ${old} on ${path}`,
+    );
+  for (const href of icons) announcedIcons.add(href);
   for (const match of html.matchAll(
     /<script type="application\/ld\+json">([^<]+)<\/script>/g,
   ))
@@ -61,7 +89,13 @@ for (const path of routes) {
 }
 for (const href of internal)
   assert.equal((await fetch(base + href)).status, 200, `Internal link ${href}`);
+for (const href of announcedIcons) {
+  const r = await fetch(base + href);
+  assert.equal(r.status, 200, href);
+  assert.match(r.headers.get("content-type"), /^image\//, href);
+}
 for (const asset of [
+  "favicon.ico",
   "favicon.svg",
   "favicon-32.png",
   "apple-touch-icon.png",

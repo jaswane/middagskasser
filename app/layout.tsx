@@ -14,17 +14,8 @@ export const metadata: Metadata = {
   description:
     "Sammenlign HelloFresh og Godtlevert på samme kriterier. Se hva som er dokumentert, hva prisen gjelder, og hvilken matkasse som passer dere.",
   robots: { index: indexable, follow: indexable },
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: {
-      url: "/apple-touch-icon.png",
-      sizes: "180x180",
-      type: "image/png",
-    },
-  },
+  // Icons come from app/favicon.ico, app/icon.svg and app/apple-icon.png,
+  // which Next.js serves with a content hash in the URL.
   openGraph: { locale: "nb_NO", siteName: "Middagskasser.no", type: "website" },
 };
 export default function RootLayout({

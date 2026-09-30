@@ -12,7 +12,9 @@ import {
 } from "../lib/measurement.ts";
 import { redirectTarget, destination } from "../lib/commercial.ts";
 import { launchErrors } from "../lib/launch.ts";
-import { pageMetadata, indexablePaths } from "../lib/seo.ts";
+import { pageMetadata, indexablePaths, ogImage } from "../lib/seo.ts";
+import { createHash } from "node:crypto";
+import { readFileSync, existsSync } from "node:fs";
 import { providers } from "../lib/data.ts";
 import { matchProviders, type Answers } from "../lib/selector.ts";
 const now = Date.parse("2026-09-28T12:00:00Z");
@@ -254,6 +256,38 @@ test("indexable route list and social metadata stay within the approved scope", 
   const metadata = pageMetadata("/hellofresh", "HelloFresh", "Beskrivelse");
   assert.equal(metadata.alternates?.canonical, "/hellofresh");
   assert.equal(metadata.openGraph?.url, "/hellofresh");
+});
+test("sharing image URL is versioned by its content", () => {
+  const file = new URL("../public/og.png", import.meta.url);
+  const hash = createHash("sha256")
+    .update(readFileSync(file))
+    .digest("hex")
+    .slice(0, 8);
+  // Update lib/seo.ts whenever og.png changes, or social networks keep the old image.
+  assert.equal(ogImage, `/og.png?v=${hash}`);
+});
+test("brand icons come from file-based metadata and share one symbol", () => {
+  const read = (path: string) => readFileSync(new URL(path, import.meta.url));
+  for (const path of [
+    "../app/favicon.ico",
+    "../app/icon.svg",
+    "../app/apple-icon.png",
+  ])
+    assert.ok(existsSync(new URL(path, import.meta.url)), path);
+  // A public/favicon.ico would compete with app/favicon.ico.
+  assert.ok(!existsSync(new URL("../public/favicon.ico", import.meta.url)));
+  assert.equal(read("../app/favicon.ico").readUInt16LE(2), 1);
+  // The unadvertised public copies must show the same icon.
+  assert.deepEqual(read("../public/favicon.svg"), read("../app/icon.svg"));
+  assert.deepEqual(
+    read("../public/apple-touch-icon.png"),
+    read("../app/apple-icon.png"),
+  );
+  const svg = read("../app/icon.svg").toString();
+  assert.equal((svg.match(/<path /g) || []).length, 4);
+  assert.ok(!/<text/.test(svg), "no letter-based icon");
+  // layout.tsx must not advertise its own icon URLs next to the file-based ones.
+  assert.ok(!/icons\s*:/.test(read("../app/layout.tsx").toString()));
 });
 test("all 72 selector combinations are deterministic and never assign two winners", () => {
   for (const people of [2, 3, 4, 5, 6, 7])
