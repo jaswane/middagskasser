@@ -63,7 +63,10 @@ export function Footer() {
         </div>
       </div>
       <div className="container footer-bottom">
-        <span>© 2026 Middagskasser.no · Et produkt fra Swane Creative</span>
+        <span>
+          © 2026 Middagskasser.no · Et prosjekt fra{" "}
+          <a href="https://swanecreative.no/">Swane Creative</a>
+        </span>
         <span>En del av middagen-familien</span>
       </div>
     </footer>
