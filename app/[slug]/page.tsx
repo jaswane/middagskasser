@@ -443,8 +443,7 @@ function Contact() {
   );
 }
 function Privacy() {
-  const ready =
-    process.env.PRIVACY_OPERATIONS && process.env.PRIVACY_CONTACT_RETENTION;
+  const ready = process.env.PRIVACY_OPERATIONS;
   const analytics = validGaId(process.env.NEXT_PUBLIC_GA_ID);
   return (
     <div className="prose">
@@ -512,10 +511,10 @@ function Privacy() {
       <p>
         {process.env.PRIVACY_OPERATIONS ||
           "Driftsleverandør, tilgangslogger, databehandlere og eventuelle overføringer må bekreftes før offentlig lansering."}{" "}
-        E-post som du sender til oss, behandles for å svare på henvendelsen.
-        E-posttjenesten vår leveres av Domeneshop AS.{" "}
-        {process.env.PRIVACY_CONTACT_RETENTION ||
-          "Lagringstid og behandlingsgrunnlag for henvendelser må bekreftes før offentlig lansering."}{" "}
+        Henvendelser du sender oss på e-post, brukes til å besvare og følge opp
+        meldingen. E-posttjenesten vår leveres av Domeneshop AS. Vi oppbevarer
+        henvendelsene så lenge det er nødvendig for oppfølgingen og for å kunne
+        dokumentere korrespondansen.{" "}
         <Link href="/kontakt">Kontakt Swane Creative</Link> ved spørsmål om
         behandlingen eller rettighetene dine.
       </p>
@@ -548,7 +547,7 @@ function Privacy() {
       {!ready && (
         <p className="neutral-note">
           Denne forhåndsvisningen er ikke klar for offentlig lansering.
-          Opplysninger om drift og lagring må bekreftes først.
+          Opplysninger om teknisk drift må bekreftes først.
         </p>
       )}
     </div>

@@ -35,9 +35,10 @@ export function launchErrors(
       errors.push(`${key}: satt verdi er ikke en gyldig Adtraction-lenke.`);
     }
   }
-  for (const key of ["PRIVACY_OPERATIONS", "PRIVACY_CONTACT_RETENTION"])
-    if (!env[key]?.trim())
-      errors.push(`${key}: bekreftede personvernopplysninger mangler.`);
+  if (!env.PRIVACY_OPERATIONS?.trim())
+    errors.push(
+      "PRIVACY_OPERATIONS: bekreftede personvernopplysninger mangler.",
+    );
   if (env.LAUNCH_VERIFIED !== "true")
     errors.push(
       "Lanseringskontroll i faktisk drift er ikke bekreftet (LAUNCH_VERIFIED).",

@@ -155,15 +155,22 @@ test("missing or unsafe affiliate configuration falls back to the plain eButikke
 });
 test("production launch cannot silently use absent legal or commercial configuration", () => {
   const empty = launchErrors({});
-  assert.equal(empty.length, 4);
+  assert.equal(empty.length, 3);
   // Launch without analytics, and without affiliate URLs (eButikker.no fallback).
   const configured = {
     NEXT_PUBLIC_SITE_URL: "https://middagskasser.no",
     PRIVACY_OPERATIONS: "QA fixture only",
-    PRIVACY_CONTACT_RETENTION: "QA fixture only",
     LAUNCH_VERIFIED: "true",
   };
   assert.deepEqual(launchErrors(configured), []);
+  // Hosting details stay mandatory; there is no fixed deletion date for
+  // ordinary contact email, so that must not block launch.
+  assert.deepEqual(
+    launchErrors({ ...configured, PRIVACY_OPERATIONS: " " }).map(
+      (error) => error.split(":")[0],
+    ),
+    ["PRIVACY_OPERATIONS"],
+  );
   assert.deepEqual(launchErrors({ ...configured, NEXT_PUBLIC_GA_ID: " " }), []);
   assert.deepEqual(
     launchErrors({
@@ -195,7 +202,6 @@ test("a GA4 ID that is set must be valid and have a confirmed retention", () => 
   const configured = {
     NEXT_PUBLIC_SITE_URL: "https://middagskasser.no",
     PRIVACY_OPERATIONS: "QA fixture only",
-    PRIVACY_CONTACT_RETENTION: "QA fixture only",
     LAUNCH_VERIFIED: "true",
   };
   for (const value of ["UA-12345-1", "G-", "g-qatest1234", "G-QATEST1234 "]) {
@@ -226,7 +232,6 @@ test("an affiliate URL that is set must still be a valid Adtraction link", () =>
   const configured = {
     NEXT_PUBLIC_SITE_URL: "https://middagskasser.no",
     PRIVACY_OPERATIONS: "QA fixture only",
-    PRIVACY_CONTACT_RETENTION: "QA fixture only",
     LAUNCH_VERIFIED: "true",
   };
   for (const value of [

@@ -10,7 +10,6 @@ Bruk `.env.example` som mal i valgt verts miljøvariabler. Faktiske sporingslenk
 - `NEXT_PUBLIC_GA_ID`: valgfri. Tom verdi gir ingen statistikk, ingen samtykkebanner og ingen Google-kode. En satt verdi må være en reell G-ID fra riktig GA4-datastrøm.
 - `HELLOFRESH_AFFILIATE_URL` og `GODTLEVERT_AFFILIATE_URL`: valgfrie. Tomme verdier gir den godkjente eButikker.no-fallbacken. En satt verdi må være en godkjent HTTPS-lenke fra eget Adtraction-program, på `track.adtraction.com` eller `adtr.co`, ellers gir lanseringskontrollen NO-GO.
 - `PRIVACY_OPERATIONS`: ferdig godkjent tekst om driftsleverandør, databehandlere, behandlingssted, tekniske logger, formål, grunnlag, lagring og overføringsgrunnlag utenfor EØS, også for Google der aktuelt.
-- `PRIVACY_CONTACT_RETENTION`: faktisk lagringstid og behandlingsgrunnlag for kontaktmeldinger.
 - `GA_RETENTION_MONTHS`: kreves bare når GA4-ID er satt. 2 eller 14, identisk med innstillingen i GA4. Slå av forlengelse ved ny aktivitet hvis den beskrevne fristen skal gjelde.
 - `LAUNCH_VERIFIED=true`: først etter bekreftet kildeferskhet, personverntekst/databehandleravtaler, partnerrettigheter, faktiske destinasjoner og QA i valgt drift.
 - `NEXT_PUBLIC_INDEXABLE=true`: bare i det endelige produksjonsbygget etter kontrollen over. Forhåndsvisninger skal ha false.
