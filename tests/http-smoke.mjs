@@ -16,6 +16,7 @@ const indexable = [
   "/annonselenker",
   "/kokkeloren",
   "/matkasser",
+  "/beste-matkasse",
 ];
 const routes = [...indexable, ...noindexRoutes];
 const internal = new Set();

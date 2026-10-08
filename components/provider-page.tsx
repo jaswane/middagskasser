@@ -17,30 +17,11 @@ import {
   deliverySampleText,
   freshDeliverySamples,
   editorialProviders,
+  priceTally,
   type Provider,
 } from "@/lib/data";
 import { destination } from "@/lib/commercial";
 import { AffiliateDisclosure } from "./affiliate-disclosure";
-// Fresh totals with delivery for the sizes both core providers offer.
-function priceTally(a: Provider, b: Provider) {
-  let aWins = 0,
-    bWins = 0,
-    ties = 0,
-    checkedAt = "";
-  for (const q of a.quotes) {
-    const qa = getQuote(a, q.people, q.meals),
-      qb = getQuote(b, q.people, q.meals);
-    if (!qa || !qb || qa.deliveryFee === null || qb.deliveryFee === null)
-      continue;
-    const ta = qa.boxPrice + qa.deliveryFee,
-      tb = qb.boxPrice + qb.deliveryFee;
-    if (ta < tb) aWins++;
-    else if (tb < ta) bWins++;
-    else ties++;
-    checkedAt = qa.source.checkedAt;
-  }
-  return { aWins, bWins, ties, total: aWins + bWins + ties, checkedAt };
-}
 export function ProviderPage({ provider: p }: { provider: Provider }) {
   const sizes = readFact(p.people),
     meals = readFact(p.meals),
@@ -295,6 +276,11 @@ export function ProviderPage({ provider: p }: { provider: Provider }) {
               </li>
             ))}
           </ul>
+          <p>
+            <Link href="/beste-matkasse">
+              Se hvilken matkasse som peker seg ut for ulike behov
+            </Link>
+          </p>
           <h2>Kilder og kontroll</h2>
           <ul className="source-list">
             {[

@@ -114,7 +114,13 @@ export function EditorialProviderPage({
           <h2>Viktigste begrensning</h2>
           <p>{e.limitation}</p>
           <h2>Når HelloFresh eller Godtlevert passer bedre</h2>
-          <p>{e.alternative}</p>
+          <p>
+            {e.alternative}{" "}
+            <Link href="/beste-matkasse">
+              Se hvilken matkasse som peker seg ut for ulike behov
+            </Link>
+            .
+          </p>
           <ul>
             <li>
               Valg av retter: {p.name} har én fast meny.{" "}

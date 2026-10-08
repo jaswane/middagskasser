@@ -199,7 +199,11 @@ const catalog: Provider<ProviderSlug>[] = [
     selectionCount: {
       ...fact(
         150,
-        gs,
+        source(
+          "https://www.godtlevert.no/",
+          "Godtlevert – egen nettside",
+          priceDate,
+        ),
         "Leverandøroppgitt. Eldre sider oppgir andre tall. Ikke en uavhengig telling.",
       ),
       reviewAfterDays: 30,
@@ -291,7 +295,11 @@ const catalog: Provider<ProviderSlug>[] = [
     selectionCount: {
       ...fact(
         50,
-        hs,
+        source(
+          "https://www.hellofresh.no/",
+          "HelloFresh – egen nettside",
+          priceDate,
+        ),
         "Leverandøroppgitt. Eldre sider oppgir andre tall. Ikke en uavhengig telling.",
       ),
       reviewAfterDays: 30,
@@ -556,6 +564,30 @@ export const listJoin = (items: string[], last = "og") =>
   items.length > 1
     ? `${items.slice(0, -1).join(", ")} ${last} ${items[items.length - 1]}`
     : items.join("");
+// Fresh totals with delivery for the sizes both core providers offer.
+export function priceTally(
+  a: Provider<ProviderSlug>,
+  b: Provider<ProviderSlug>,
+  now = new Date(),
+) {
+  let aWins = 0,
+    bWins = 0,
+    ties = 0,
+    checkedAt = "";
+  for (const q of a.quotes) {
+    const qa = getQuote(a, q.people, q.meals, now),
+      qb = getQuote(b, q.people, q.meals, now);
+    if (!qa || !qb || qa.deliveryFee === null || qb.deliveryFee === null)
+      continue;
+    const ta = qa.boxPrice + qa.deliveryFee,
+      tb = qb.boxPrice + qb.deliveryFee;
+    if (ta < tb) aWins++;
+    else if (tb < ta) bWins++;
+    else ties++;
+    checkedAt = qa.source.checkedAt;
+  }
+  return { aWins, bWins, ties, total: aWins + bWins + ties, checkedAt };
+}
 // Delivery samples follow the same 30-day freshness as prices.
 export function freshDeliverySamples(
   p: Provider<ProviderSlug>,

@@ -283,8 +283,9 @@ test("an affiliate URL that is set must still be a valid Adtraction link", () =>
   }
 });
 test("indexable route list and social metadata stay within the approved scope", () => {
-  assert.equal(indexablePaths.length, 11);
+  assert.equal(indexablePaths.length, 12);
   assert.ok(indexablePaths.includes("/matkasser"));
+  assert.ok(indexablePaths.includes("/beste-matkasse"));
   assert.ok(indexablePaths.includes("/kokkeloren"));
   for (const path of [
     "/finn-matkasse",

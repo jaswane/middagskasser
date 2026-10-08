@@ -256,3 +256,45 @@ test("market overview: sourced entries, every profile included, order ignores co
       ),
     );
 });
+test("best-by-need conclusions follow the data and disappear when it expires", async () => {
+  const { bestByNeed } = await import("../lib/best.ts");
+  const b = bestByNeed(now);
+  const row = (id: string) => b.rows.find((r) => r.id === id)!;
+  assert.deepEqual(
+    b.kits.map((p) => p.id),
+    ["godtlevert", "hellofresh", "kokkeloren"],
+  );
+  // 8 shared HelloFresh/Godtlevert sizes with delivery: 6 / 1 / 1 tie.
+  assert.deepEqual(
+    [b.tally.aWins, b.tally.bWins, b.tally.ties, b.tally.total],
+    [6, 1, 1, 8],
+  );
+  assert.equal(row("pris").cells.hellofresh.mark, "best");
+  assert.equal(row("pris").cells.godtlevert.mark, "yes");
+  assert.equal(row("pris").cells.kokkeloren.detail, "Dyrest i begge");
+  assert.equal(row("storrelse").need, "Tre, fem eller seks porsjoner");
+  assert.equal(row("storrelse").cells.godtlevert.mark, "best");
+  assert.equal(row("storrelse").cells.hellofresh.mark, "no");
+  assert.equal(row("utvalg").cells.godtlevert.detail, "Oppgir 150 retter");
+  assert.equal(row("utvalg").cells.kokkeloren.mark, "no");
+  assert.equal(row("fast-meny").cells.kokkeloren.mark, "best");
+  // Kokkeløren costs 279 (2 × 3) to 389 kr (4 × 3) more than the cheapest.
+  assert.deepEqual(
+    b.premium.map((x) => [x.min, x.max]),
+    [[279, 389]],
+  );
+  // No mark is ever a score: only the three documented states exist.
+  for (const r of b.rows)
+    for (const c of Object.values(r.cells))
+      assert.ok(["best", "yes", "no"].includes(c.mark));
+  const later = bestByNeed(new Date("2026-11-08T12:00:00Z"));
+  assert.equal(
+    later.rows.find((r) => r.id === "pris"),
+    undefined,
+  );
+  assert.equal(
+    later.rows.find((r) => r.id === "utvalg"),
+    undefined,
+  );
+  assert.equal(later.premium.length, 0);
+});

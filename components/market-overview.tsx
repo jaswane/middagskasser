@@ -116,7 +116,7 @@ function ModelMap() {
 }
 // Box price and delivery for the sizes every råvarekasse with a profile
 // offers. Hidden as soon as one of them lacks a fresh price.
-function PriceExamples() {
+export function PriceExamples() {
   const ps = market
     .filter((e) => e.type === "ravarekasse" && e.profile)
     .sort((a, b) => a.name.localeCompare(b.name, "nb"))
@@ -316,6 +316,11 @@ export function MarketOverview() {
           <Link href="/finn-matkasse">bruk matkassevelgeren</Link>. Slik har vi
           kontrollert opplysningene:{" "}
           <Link href="/slik-sammenligner-vi">Slik sammenligner vi</Link>.
+        </p>
+        <p>
+          Hvilken av de tre råvarekassene som peker seg ut for pris, størrelse
+          eller menyvalg, har vi samlet på{" "}
+          <Link href="/beste-matkasse">Beste matkasse for ulike behov</Link>.
         </p>
       </div>
     </div>

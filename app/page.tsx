@@ -110,6 +110,9 @@ export default function Home() {
             <Link className="text-link" href="/hellofresh-vs-godtlevert">
               Se hva som faktisk skiller dem <ArrowRight size={17} />
             </Link>
+            <Link className="text-link" href="/beste-matkasse">
+              Beste matkasse for ulike behov <ArrowRight size={17} />
+            </Link>
           </div>
           <div className="decision-points">
             <article>

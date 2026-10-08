@@ -10,6 +10,7 @@ import { Comparison } from "@/components/comparison";
 import { ProviderPage } from "@/components/provider-page";
 import { EditorialProviderPage } from "@/components/editorial-provider-page";
 import { MarketOverview } from "@/components/market-overview";
+import { BestByNeed } from "@/components/best-by-need";
 import { OfferBox } from "@/components/offer";
 import { ConsentSettings } from "@/components/analytics";
 import {
@@ -44,6 +45,12 @@ const corePages: Record<string, PageInfo> = {
     description:
       "Se hvilke matkasser som leverer i Norge, hvem de passer for og hva som skiller dem. Kontrollert mot leverandørenes egne nettsider.",
     eyebrow: "MARKEDSOVERSIKT",
+  },
+  "beste-matkasse": {
+    title: "Beste matkasse for ulike behov",
+    description:
+      "HelloFresh, Godtlevert eller Kokkeløren? Se hvilken matkasse som peker seg ut for pris, størrelse og menyvalg, basert på kontrollerte priser og vilkår.",
+    eyebrow: "BESTE VALG ETTER BEHOV",
   },
   "hellofresh-vs-godtlevert": {
     title: "HelloFresh eller Godtlevert?",
@@ -151,6 +158,13 @@ export default async function Page({
       <>
         <PageSchema path={`/${slug}`} title={p.title} />
         <ProviderPage provider={provider} />
+      </>
+    );
+  if (slug === "beste-matkasse")
+    return (
+      <>
+        <PageSchema path="/beste-matkasse" title={p.title} />
+        <BestByNeed />
       </>
     );
   if (slug === "matkasser")
@@ -310,15 +324,19 @@ function Method() {
       </p>
       <h2>Slik kontrollerer vi pris</h2>
       <p>
-        Den 28.09.2026 leste vi åtte like pakkestørrelser i begge leverandørenes
-        bestillingsflyt. Ingen bestilling ble gjort. Vi brukte normalprisen,
-        uten velkomsttilbud, plusretter eller ekstra varer.
+        Den 08.10.2026 leste vi prisene for alle tre råvarekassene samme kveld,
+        i leverandørenes egne bestillingsløp. Ingen bestilling ble gjort. Vi
+        brukte normalprisen, uten velkomsttilbud, plusretter eller ekstra varer.
+        Frakten ble i tillegg sjekket for postnummer 0150, 5003 og 7010.
       </p>
       <ul>
-        <li>HelloFresh: kasse og frakt ble lest sammen for postnummer 0150.</li>
+        <li>
+          HelloFresh: alle åtte kassestørrelser, med kasse og frakt lest sammen
+          for postnummer 0150.
+        </li>
         <li>
           Kokkeløren: kassepris og frakt ble lest i bestillingen for postnummer
-          0150 den 08.10.2026. Bare kassene for to og fire voksne regnes med i
+          0150. Bare kassene for to og fire voksne regnes med i
           prissammenligningen.
         </li>
         <li>
