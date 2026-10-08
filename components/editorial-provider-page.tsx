@@ -11,6 +11,7 @@ import {
   formatPrice,
   formatServing,
   providerSources,
+  deliverySampleText,
   type EditorialProfile,
   type EditorialProviderId,
   type Provider,
@@ -40,6 +41,10 @@ export function EditorialProviderPage({
   const shared = prices.filter((q) =>
     providers.every((c) => total(c, q.people, q.meals) !== null),
   );
+  const coreChecked = shared.length
+    ? getQuote(providers[0], shared[0].people, shared[0].meals)!.source
+        .checkedAt
+    : "";
   return (
     <div className="container page-content">
       <PageIntro
@@ -50,15 +55,6 @@ export function EditorialProviderPage({
       </PageIntro>
       <div className="content-grid">
         <div className="prose">
-          <h2>Slik fungerer {p.name}</h2>
-          <p>{e.difference}</p>
-          {sizes && meals && (
-            <p>
-              Kassen har alltid {meals.join(" eller ")} middager og finnes for{" "}
-              {sizes.join(" eller ")} voksne. {p.people.note}
-            </p>
-          )}
-          {p.quick.note && <p>{p.quick.note}</p>}
           <h2>Hva koster {p.name}?</h2>
           {prices.length ? (
             <>
@@ -89,21 +85,36 @@ export function EditorialProviderPage({
               dere bestiller.
             </p>
           )}
-          <h2>Hvor mye kan dere velge selv?</h2>
+          <h2>Hva dere får og velger</h2>
+          <p>{e.difference}</p>
+          {sizes && meals && (
+            <p>
+              Kassen har alltid {meals.join(" eller ")} middager og finnes for{" "}
+              {sizes.join(" eller ")} voksne. {p.people.note}
+            </p>
+          )}
+          {p.quick.note && <p>{p.quick.note}</p>}
           <p>
             {readFact(p.selection) ?? "Må kontrolleres."}{" "}
             {readFact(p.vegetarian)}
           </p>
-          <h2>Hvem passer {p.name} best for?</h2>
+          <h2>Hvor og når {p.name} leverer</h2>
+          <p>
+            {readOptional(p.coverage)} {readOptional(p.deliveryWindows)}{" "}
+            {deliverySampleText(p)} Om dere får levert, ser dere når dere
+            skriver inn postnummeret hos {p.name}.
+          </p>
+          <h2>Pause og avbestilling</h2>
+          <p>{readFact(p.flexibility)}</p>
+          <h2>Hvem passer {p.name} for?</h2>
           <p>{e.fitFor}</p>
           <p>
-            <strong>Viktigste styrke:</strong> {e.strength}
+            <strong>Derfor kan dere velge {p.name}:</strong> {e.strength}
           </p>
-          <p>
-            <strong>Viktigste begrensning:</strong> {e.limitation}
-          </p>
+          <h2>Viktigste begrensning</h2>
+          <p>{e.limitation}</p>
+          <h2>Når HelloFresh eller Godtlevert passer bedre</h2>
           <p>{e.alternative}</p>
-          <h2>{p.name}, HelloFresh eller Godtlevert?</h2>
           <ul>
             <li>
               Valg av retter: {p.name} har én fast meny.{" "}
@@ -142,27 +153,16 @@ export function EditorialProviderPage({
           </ul>
           {shared.length > 0 && (
             <p className="neutral-note">
-              Prisene for {providers.map((c) => c.name).join(" og ")} ble
-              kontrollert{" "}
-              {formatDate(
-                getQuote(providers[0], shared[0].people, shared[0].meals)!
-                  .source.checkedAt,
-              )}
-              , og prisene for {p.name} {formatDate(shared[0].source.checkedAt)}
-              . Alle gjelder ordinær pris med oppgitt frakt. Vi regner {p.name}s
+              {coreChecked === shared[0].source.checkedAt
+                ? `Alle prisene ble kontrollert ${formatDate(coreChecked)}.`
+                : `Prisene for ${providers.map((c) => c.name).join(" og ")} ble kontrollert ${formatDate(coreChecked)}, og prisene for ${p.name} ${formatDate(shared[0].source.checkedAt)}.`}{" "}
+              Alle gjelder ordinær pris med oppgitt frakt. Vi regner {p.name}s
               kasse for to eller fire voksne som to eller fire porsjoner.
             </p>
           )}
           <Link className="text-link" href="/hellofresh-vs-godtlevert">
             Se HelloFresh og Godtlevert side om side <ArrowRight size={15} />
           </Link>
-          <h2>Levering og fleksibilitet</h2>
-          <p>
-            {readOptional(p.coverage)} {readOptional(p.deliveryWindows)} Om dere
-            får levert, ser dere først når dere skriver inn postnummeret hos{" "}
-            {p.name}.
-          </p>
-          <p>{readFact(p.flexibility)}</p>
           <p>
             Lenken under går rett til {p.name}. Den er ikke en annonselenke, og
             vi får ikke provisjon om dere bestiller.

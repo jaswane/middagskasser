@@ -250,7 +250,7 @@ const catalog: Provider<ProviderSlug>[] = [
       fee: null,
       available: true,
       source: gd,
-      note: "Leveringsdager vises for postnummeret, men ikke frakt. Oppgitt standardfrakt er 79 kr.",
+      note: "Leveringssjekken viser dager og tidsvinduer, men ikke frakt. Frakten for adressen vises først når dere har laget konto.",
     })),
     surcharge: {
       ...fact(
@@ -271,8 +271,9 @@ const catalog: Provider<ProviderSlug>[] = [
       "Dokumenterte porsjonsvalg fra 2 til 6.",
       "Oppgir flere retter å velge mellom enn HelloFresh.",
     ],
+    // The first limitation is shown as the most important one.
     limitations: [
-      "Standardeksemplet inkluderer oppgitt frakt; adressepris er ikke bekreftet.",
+      "Frakten for adressen deres ser dere først når dere har laget konto. Priseksemplene her bruker Godtleverts oppgitte standardfrakt.",
       "Flere retter betyr ikke nødvendigvis flere retter som passer dere.",
     ],
     sources: [gs, gp, gf, gt],
@@ -331,7 +332,7 @@ const catalog: Provider<ProviderSlug>[] = [
         `HelloFresh – planvalg, postnummer ${postcode}`,
         priceDate,
       ),
-      note: "Samme frakt for alle kassestørrelser. Enkelte leveringstidspunkter kan koste ekstra.",
+      note: "Det gjaldt alle kassestørrelser, men enkelte leveringstidspunkter koster ekstra.",
     })),
     surcharge: {
       ...fact(
@@ -349,9 +350,9 @@ const catalog: Provider<ProviderSlug>[] = [
       "Lavere standardpris i flere av de kontrollerte pakkestørrelsene.",
       "Du velger retter og kan hoppe over uker.",
     ],
+    // The first limitation is shown as the most important one.
     limitations: [
-      "Planvalget viste bare 2 eller 4 porsjoner.",
-      "Fraktprisen er kontrollert for postnummer 0150, ikke alle adresser.",
+      "Kassen finnes bare for to eller fire porsjoner per middag. Er dere tre, fem eller seks, blir den enten for liten eller for stor.",
     ],
     sources: [hs, hp, ht],
   },
@@ -409,7 +410,7 @@ const catalog: Provider<ProviderSlug>[] = [
         `Kokkeløren – bestilling, postnummer ${postcode}`,
         kokkelorenDate,
       ),
-      note: "Hjemlevering var eneste leveringsvalg. Samme frakt for alle kassestørrelser.",
+      note: "Det gjaldt alle kassestørrelser, og hjemlevering var eneste leveringsvalg.",
     })),
     // Observed in the order picker for postcode 0150 on 2026-10-08. Only the
     // sizes that match 2 or 4 portions are recorded; three dinners is fixed.
@@ -536,6 +537,51 @@ export const formatServing = (amount: number) =>
     maximumFractionDigits: 2,
   }).format(amount) + " kr";
 export const formatDate = (d: string) => d.split("-").reverse().join(".");
+const numberWords = [
+  "null",
+  "én",
+  "to",
+  "tre",
+  "fire",
+  "fem",
+  "seks",
+  "sju",
+  "åtte",
+  "ni",
+  "ti",
+];
+// Small numbers as words in running text.
+export const numberWord = (n: number) => numberWords[n] ?? String(n);
+export const listJoin = (items: string[], last = "og") =>
+  items.length > 1
+    ? `${items.slice(0, -1).join(", ")} ${last} ${items[items.length - 1]}`
+    : items.join("");
+// Delivery samples follow the same 30-day freshness as prices.
+export function freshDeliverySamples(
+  p: Provider<ProviderSlug>,
+  now = new Date(),
+): DeliverySample[] {
+  return (p.deliverySamples ?? []).filter((s) =>
+    isFresh(s.source.checkedAt, 30, now),
+  );
+}
+// One sentence about the sampled postcodes, or null without fresh samples.
+export function deliverySampleText(
+  p: Provider<ProviderSlug>,
+  now = new Date(),
+): string | null {
+  const s = freshDeliverySamples(p, now);
+  if (!s.length || s.some((x) => !x.available)) return null;
+  const where = listJoin(s.map((x) => `${x.postcode} (${x.place})`));
+  const fees = [...new Set(s.map((x) => x.fee))];
+  const fee =
+    fees.length === 1 && fees[0] !== null
+      ? ` Frakten var ${fees[0]} kr for alle ${numberWord(s.length)}.`
+      : fees.every((f) => f !== null)
+        ? ` Frakten var ${listJoin(s.map((x) => `${x.fee} kr for ${x.postcode}`))}.`
+        : "";
+  return `Ved kontroll ${formatDate(s[0].source.checkedAt)} kunne ${p.name} levere til postnummer ${where}.${fee} ${s[0].note ?? ""}`.trim();
+}
 export function providerSources(p: Provider<ProviderSlug>): Source[] {
   const all = [
     ...p.sources,

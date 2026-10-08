@@ -31,6 +31,21 @@ HelloFresh- og Godtlevert-logoene er i bruk uten dokumentert rettighetsgrunnlag.
 
 Eier må velge. Til det er avklart, tas ingen nye leverandørlogoer i bruk.
 
+### Gjennomgang 08.10.2026, kveld
+
+Status er uendret: rettighetsgrunnlaget er fortsatt ikke dokumentert. Logoene brukes på nøyaktig to steder i koden, og ingen nye flater er tatt i bruk. Typeoversikten og priseksemplene på `/matkasser` bruker bare tekstnavn.
+
+| Sted | Fil | Hva vises |
+| --- | --- | --- |
+| `components/comparison.tsx`, `ProviderName` | `hellofresh.ico`, `godtlevert-icon.svg` | Ikon ved navnet i hovedsammenligningen og velgerresultatet |
+| `components/provider-page.tsx`, toppen av siden | `hellofresh-logo.png`, `godtlevert-logo.svg` | Logo under H1 på `/hellofresh` og `/godtlevert` |
+
+Hvis logoene må fjernes, er dette en trygg tekstbasert løsning som ikke endrer oppsettet:
+
+1. I `ProviderName` byttes `<Image>` ut med en dekorativ prikk i leverandørens farge (`color` i `lib/data.ts`), med `aria-hidden`. Navnet står allerede som tekst ved siden av.
+2. På leverandørsidene fjernes `<Image>` under H1. Navnet står i H1.
+3. Filene i `public/brands/` slettes, og fillisten i røyktesten (`tests/http-smoke.mjs`) og sjekksummene i `brand-hashes.json` oppdateres samtidig.
+
 ## Nettstedets egne filer
 
 Favicon, Apple-ikon og delingsbildet (`og.png`) er nettstedets egen merkevare, laget fra PackageOpen-symbolet (Lucide, ISC-lisens) med [generate-brand-assets.cjs](../production-sprint/generate-brand-assets.cjs). Forsidebildet `public/images/middag.jpg` er et illustrasjonsfoto fra Pexels under Pexels-lisensen, uten tilknytning til noen leverandør.

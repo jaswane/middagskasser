@@ -8,6 +8,7 @@ import {
   getQuote,
   activeOffer,
   isFresh,
+  deliverySampleText,
   type Offer,
 } from "../lib/data.ts";
 import { matchProviders, resultTitle, type Answers } from "../lib/selector.ts";
@@ -45,6 +46,14 @@ test("prices disappear everywhere when the check is older than 30 days", () => {
       assert.equal(getQuote(p, q.people, q.meals, expired), null);
   const m = matchProviders(providers, answers(), expired);
   assert.ok(m.every((x) => x.priceQuote === null && x.score === 0));
+});
+test("delivery sample text states only what was seen and expires with prices", () => {
+  const hf = getProvider("hellofresh")!,
+    gl = getProvider("godtlevert")!;
+  assert.match(deliverySampleText(hf, now)!, /79 kr for alle tre/);
+  assert.match(deliverySampleText(gl, now)!, /ikke frakt/);
+  assert.doesNotMatch(deliverySampleText(gl, now)!, /d+ kr/);
+  assert.equal(deliverySampleText(hf, new Date("2026-11-08T12:00:00Z")), null);
 });
 test("delivery samples are tied to a postcode and never stand in for a fee", () => {
   for (const p of [...providers, ...editorialProviders]) {

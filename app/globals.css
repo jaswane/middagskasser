@@ -1631,3 +1631,261 @@ svg {
     font-size: 14px;
   }
 }
+/* /matkasser: the four models as two questions */
+.model-map {
+  --tree: #a9b2a3;
+  background: var(--soft);
+  border-top: 3px solid var(--ink);
+  padding: 30px 32px 34px;
+  margin-bottom: 10px;
+}
+.model-map h2 {
+  font-size: 31px;
+  margin-bottom: 22px;
+}
+.model-root,
+.model-question {
+  font-family: Georgia, "Times New Roman", serif;
+  text-align: center;
+  line-height: 1.3;
+}
+.model-root {
+  font-size: 23px;
+  position: relative;
+  padding-bottom: 26px;
+}
+.model-root::after,
+.model-branch::before,
+.model-question::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  border-left: 1px solid var(--tree);
+}
+.model-root::after {
+  bottom: 0;
+  height: 26px;
+}
+.model-branches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  position: relative;
+}
+.model-branches::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: calc(25% - 8px);
+  right: calc(25% - 8px);
+  border-top: 1px solid var(--tree);
+}
+.model-branch {
+  position: relative;
+  padding-top: 22px;
+}
+.model-branch::before {
+  top: 0;
+  height: 22px;
+}
+.model-answer {
+  display: table;
+  margin: 0 auto 12px;
+  background: var(--white);
+  border: 1px solid var(--tree);
+  border-radius: 999px;
+  padding: 3px 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.model-question {
+  font-size: 19px;
+  position: relative;
+  padding-bottom: 22px;
+}
+.model-question::after {
+  bottom: 0;
+  height: 22px;
+}
+.model-leaves {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--tree);
+  padding-top: 16px;
+}
+.model-leaves > li {
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 16px 18px 18px;
+}
+.model-tag {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.model-leaves h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.25;
+  margin: 6px 0 8px;
+}
+.model-leaves p {
+  font-size: 14px;
+}
+.model-names {
+  margin-top: 10px !important;
+  font-weight: 600;
+}
+.model-names a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.market-entry {
+  scroll-margin-top: 20px;
+}
+/* /matkasser: comparable price examples */
+.price-examples {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+.price-examples table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.price-examples caption {
+  text-align: left;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+  padding-bottom: 8px;
+}
+.price-examples th,
+.price-examples td {
+  text-align: left;
+  padding: 9px 8px 9px 0;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+}
+.price-examples thead th {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.price-examples tbody th {
+  font-weight: 600;
+}
+.price-examples td:nth-child(2) {
+  white-space: nowrap;
+}
+.price-examples small {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+@media (max-width: 1050px) {
+  .model-leaves {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 760px) {
+  .model-map {
+    padding: 24px 18px 26px;
+  }
+  .model-map h2 {
+    font-size: 27px;
+  }
+  .model-root,
+  .model-question {
+    text-align: left;
+  }
+  .model-root::after,
+  .model-question::after,
+  .model-branch::before,
+  .model-branches::before {
+    display: none;
+  }
+  .model-root {
+    font-size: 21px;
+    padding-bottom: 14px;
+  }
+  .model-branches {
+    grid-template-columns: 1fr;
+    gap: 26px;
+    border-left: 1px solid var(--tree);
+    padding-left: 16px;
+  }
+  .model-branch {
+    padding-top: 0;
+  }
+  .model-answer {
+    margin: 0 0 10px;
+  }
+  .model-question {
+    padding-bottom: 12px;
+  }
+  .model-leaves {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .price-examples {
+    grid-template-columns: 1fr;
+  }
+}
+/* Provider pages: box prices by portions and dinners */
+.table-scroll {
+  overflow-x: auto;
+  margin: 18px 0;
+}
+.price-grid {
+  border-collapse: collapse;
+  font-size: 15px;
+  min-width: 100%;
+}
+.price-grid caption {
+  text-align: left;
+  font-size: 13px;
+  color: var(--muted);
+  padding-bottom: 8px;
+}
+.price-grid th,
+.price-grid td {
+  padding: 9px 12px 9px 0;
+  text-align: right;
+  white-space: nowrap;
+  border-top: 1px solid var(--line);
+}
+.price-grid thead th {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.price-grid thead tr:first-child th,
+.price-grid thead tr:first-child td {
+  border-top: 0;
+  text-align: center;
+}
+.price-grid th[scope="row"],
+.price-grid th[scope="col"]:first-child {
+  text-align: left;
+}
+.price-grid th[scope="row"] {
+  font-weight: 600;
+}
+@media (max-width: 760px) {
+  .price-grid {
+    font-size: 14px;
+  }
+  .price-grid th,
+  .price-grid td {
+    padding-right: 8px;
+  }
+}

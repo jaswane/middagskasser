@@ -25,6 +25,8 @@ export type MarketEntry = {
   commercial: "affiliate" | "none" | "unknown";
   // Provider with a full profile page on this site.
   profile?: ProviderSlug;
+  // Råvarekasser only: whether customers pick dishes or get a fixed menu.
+  menu?: "choose" | "fixed";
 };
 const s = (url: string, title: string, checkedAt: string): Source => ({
   url,
@@ -42,7 +44,7 @@ export const market: MarketEntry[] = [
     difference:
       "Dere velger rettene selv, og kassen finnes i flere størrelser enn hos HelloFresh og Kokkeløren.",
     limitation:
-      "Frakten kan variere med område, og enkelte retter koster ekstra.",
+      "Frakten for adressen vises først når dere har laget konto, og enkelte retter koster ekstra.",
     checkedAt: "2026-09-28",
     sources: [
       s(
@@ -63,6 +65,7 @@ export const market: MarketEntry[] = [
     ],
     commercial: "affiliate",
     profile: "godtlevert",
+    menu: "choose",
   },
   {
     id: "hellofresh",
@@ -83,6 +86,7 @@ export const market: MarketEntry[] = [
     ],
     commercial: "affiliate",
     profile: "hellofresh",
+    menu: "choose",
   },
   {
     id: "kokkeloren",
@@ -105,6 +109,7 @@ export const market: MarketEntry[] = [
     ],
     commercial: "none",
     profile: "kokkeloren",
+    menu: "fixed",
   },
   {
     id: "godmatlyst",
