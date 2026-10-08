@@ -13,6 +13,7 @@ import {
 import { Comparison } from "@/components/comparison";
 import { Sibling } from "@/components/chrome";
 import { affiliateFlags } from "@/lib/commercial";
+import { editorialProviders } from "@/lib/data";
 export const dynamic = "force-dynamic";
 export const metadata = pageMetadata(
   "/",
@@ -144,6 +145,22 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {editorialProviders.map((e) => (
+        <section key={e.id} className="section container">
+          <div className="decision-grid">
+            <div>
+              <span className="eyebrow">ET ANNET ALTERNATIV</span>
+              <h2>{e.editorial.homeHeading}</h2>
+            </div>
+            <div>
+              <p>{e.editorial.homeTeaser}</p>
+              <Link className="text-link" href={`/${e.id}`}>
+                Les om {e.name} <ArrowRight size={17} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      ))}
       <section className="section container">
         <div className="selector-teaser">
           <div className="selector-icon">

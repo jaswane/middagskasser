@@ -1,4 +1,13 @@
+// Core providers: main comparison, selector and the central /go/ flow.
 export type ProviderId = "godtlevert" | "hellofresh";
+// Editorial providers: own page and shown as an alternative, with a plain
+// link to the provider. Not part of the selector or the side-by-side table.
+export type EditorialProviderId = "kokkeloren";
+export type ProviderSlug = ProviderId | EditorialProviderId;
+// Which parts of the site a provider takes part in. Commercial agreements do
+// not set this: coverage depends on whether the provider is a relevant choice
+// and how comparable its documented facts are.
+export type ProviderTier = "core" | "editorial";
 export type Source = { url: string; title: string; checkedAt: string };
 export type Fact<T> = {
   value: T | null;
@@ -29,8 +38,23 @@ export type Offer = {
   lastChecked: string;
   reviewAfterDays: number;
 };
-export type Provider = {
-  id: ProviderId;
+// Provider-written page copy for editorial providers. Each line must rest on
+// the facts and sources of the same provider.
+export type EditorialProfile = {
+  title: string;
+  metaDescription: string;
+  summary: string;
+  fitFor: string;
+  difference: string;
+  strength: string;
+  limitation: string;
+  alternative: string;
+  homeHeading: string;
+  homeTeaser: string;
+};
+export type Provider<Id extends ProviderSlug = ProviderId> = {
+  id: Id;
+  tier: ProviderTier;
   name: string;
   websiteUrl: string;
   description: string;
@@ -43,17 +67,22 @@ export type Provider = {
   vegetarian: Fact<string>;
   flexibility: Fact<string>;
   delivery: Fact<string>;
+  // Provider-stated coverage and delivery windows. Shown on provider pages,
+  // never as a promise for a specific address.
+  coverage?: Fact<string>;
+  deliveryWindows?: Fact<string>;
   quotes: Quote[];
   offer: Offer | null;
   strengths: string[];
   limitations: string[];
   sources: Source[];
+  editorial?: EditorialProfile;
 };
 const date = "2026-09-28";
-const source = (url: string, title: string): Source => ({
+const source = (url: string, title: string, checkedAt = date): Source => ({
   url,
   title,
-  checkedAt: date,
+  checkedAt,
 });
 const gs = source("https://www.godtlevert.no/", "Godtlevert – egen nettside");
 const hs = source("https://www.hellofresh.no/", "HelloFresh – egen nettside");
@@ -73,6 +102,28 @@ const gt = source("https://www.godtlevert.no/vilkar", "Godtlevert – vilkår");
 const ht = source(
   "https://www.hellofresh.no/about/termsandconditions",
   "HelloFresh – vilkår",
+);
+// Kokkeløren, checked 2026-10-08. kp is the order picker with postcode 0150.
+const kokkelorenDate = "2026-10-08";
+const kv = source(
+  "https://kokkeloren.no/var-matkasse",
+  "Kokkeløren – vår matkasse",
+  kokkelorenDate,
+);
+const kf = source(
+  "https://kokkeloren.no/faq",
+  "Kokkeløren – ofte stilte spørsmål",
+  kokkelorenDate,
+);
+const kt = source(
+  "https://kokkeloren.no/vilkar-og-garantier",
+  "Kokkeløren – vilkår og garantier",
+  kokkelorenDate,
+);
+const kp = source(
+  "https://kokkeloren.no/kasse/abonnement/matkasse",
+  "Kokkeløren – bestilling, postnummer 0150",
+  kokkelorenDate,
 );
 function fact<T>(value: T | null, source: Source, note?: string): Fact<T> {
   return { value, source, reviewAfterDays: 90, note };
@@ -97,9 +148,11 @@ function quotes(id: ProviderId, prices: number[][]): Quote[] {
     })),
   );
 }
-export const providers: Provider[] = [
+// All providers we cover. The tier decides where each one appears.
+const catalog: Provider<ProviderSlug>[] = [
   {
     id: "godtlevert",
+    tier: "core",
     name: "Godtlevert",
     websiteUrl: "https://www.godtlevert.no/",
     color: "orange",
@@ -137,6 +190,22 @@ export const providers: Provider[] = [
         "Godtlevert – levering",
       ),
     ),
+    coverage: fact(
+      "Godtlevert oppgir at de leverer til 90 % av husstandene i Norge.",
+      source(
+        "https://www.godtlevert.no/",
+        "Godtlevert – egen nettside",
+        "2026-10-08",
+      ),
+    ),
+    deliveryWindows: fact(
+      "I de største områdene leverer de lørdag, søndag eller mandag i faste tidsvinduer. Hvilke tider dere kan velge, avhenger av postnummeret.",
+      source(
+        "https://tips.godtlevert.no/nb/articles/16068360-leveringstider-og-leveringsdager",
+        "Godtlevert – leveringstider og leveringsdager",
+        "2026-10-08",
+      ),
+    ),
     quotes: quotes("godtlevert", [
       [690, 860, 1020, 1190],
       [910, 1090, 1270, 1410],
@@ -154,6 +223,7 @@ export const providers: Provider[] = [
   },
   {
     id: "hellofresh",
+    tier: "core",
     name: "HelloFresh",
     websiteUrl: "https://www.hellofresh.no/",
     color: "green",
@@ -179,6 +249,22 @@ export const providers: Provider[] = [
     ),
     flexibility: fact("Ingen binding. Endres før ukens frist.", ht),
     delivery: fact("Adresseavhengig. Sjekk postnummer.", hp),
+    coverage: fact(
+      "HelloFresh oppgir at de leverer de fleste steder i Norge.",
+      source(
+        "https://www.hellofresh.no/about/how-it-works",
+        "HelloFresh – slik fungerer det",
+        "2026-10-08",
+      ),
+    ),
+    deliveryWindows: fact(
+      "Levering skjer fra lørdag til tirsdag i oppgitte tidsvinduer, og tidspunktet varierer med hvor i landet dere bor.",
+      source(
+        "https://www.hellofresh.no/about/how-it-works",
+        "HelloFresh – slik fungerer det",
+        "2026-10-08",
+      ),
+    ),
     quotes: quotes("hellofresh", [
       [660, 770, 960, 1150],
       [890, 1060, 1270, 1440],
@@ -194,8 +280,116 @@ export const providers: Provider[] = [
     ],
     sources: [hs, hp, ht],
   },
+  {
+    id: "kokkeloren",
+    tier: "editorial",
+    name: "Kokkeløren",
+    websiteUrl: "https://kokkeloren.no/",
+    color: "ink",
+    description: "Én fast meny med tre middager i uken, satt sammen av kokken.",
+    people: fact(
+      [2, 4],
+      kp,
+      "Det finnes også en kasse for to voksne og to små barn, uten oppgitt porsjonsantall.",
+    ),
+    meals: fact([3], kf),
+    selection: fact(
+      "Fast meny satt sammen av kokken. Retter kan ikke byttes eller velges bort.",
+      kf,
+    ),
+    selectionCount: fact<number>(
+      null,
+      kv,
+      "Ikke sammenlignbart: menyen er fast, så det finnes ingen meny å velge fra.",
+    ),
+    quick: fact<string>(
+      null,
+      kf,
+      "Hvor lang tid rettene tar, oppgir Kokkeløren ulikt: vanligvis 20–60 minutter i spørsmål og svar, og 25–40 minutter for de fleste retter på produktsiden.",
+    ),
+    vegetarian: fact(
+      "Menyen kan ha vegetarretter, men det finnes ikke et eget vegetarabonnement. Kassen tilpasses ikke allergier eller dietter.",
+      kf,
+    ),
+    flexibility: fact(
+      "Ingen binding. Pause eller avbestill før søndag kl. 23.59.",
+      kt,
+    ),
+    delivery: fact("Oppgitt område. Sjekk postnummer.", kf),
+    coverage: fact(
+      "Kokkeløren oppgir at de leverer fra Kristiansand i sør til Alta i nord.",
+      kf,
+    ),
+    deliveryWindows: fact(
+      "Levering skjer fredag til tirsdag, avhengig av hvor dere bor. For postnummer 0150 kunne vi velge alle fem dagene, i tidsvinduer mellom kl. 09 og 22.",
+      kp,
+    ),
+    // Observed in the order picker for postcode 0150 on 2026-10-08. Only the
+    // sizes that match 2 or 4 portions are recorded; three dinners is fixed.
+    quotes: [
+      [2, 1049],
+      [4, 1449],
+    ].map(([people, boxPrice]) => ({
+      people,
+      meals: 3,
+      boxPrice,
+      deliveryFee: 79,
+      deliverySource: kp,
+      basis: "observed-checkout" as const,
+      addressNote: "Observert for postnummer 0150. Andre adresser må sjekkes.",
+      kind: "regular" as const,
+      currency: "NOK" as const,
+      source: kp,
+      reviewAfterDays: 30,
+    })),
+    offer: null,
+    strengths: [
+      "Ingen retter å velge mellom: menyen er satt sammen av kokken.",
+      "Ingen binding, og levering hver uke eller annenhver uke.",
+    ],
+    limitations: [
+      "Retter kan ikke byttes eller velges bort.",
+      "Ingen vegetarabonnement og ingen tilpasning til allergier eller dietter.",
+      "Alltid tre middager, og bare tre kassestørrelser.",
+    ],
+    sources: [kv, kf, kt, kp],
+    editorial: {
+      title: "Kokkeløren matkasse: pris, meny og vilkår",
+      metaDescription:
+        "Kokkeløren sender én fast meny med tre middager i uken. Se pris, levering og vilkår, og hvordan den skiller seg fra HelloFresh og Godtlevert.",
+      summary:
+        "Kokkeløren er en matkasse med én fast meny: tre middager i uken som kokken har satt sammen, og som dere ikke kan bytte ut. Den kan passe for dere som vil slippe å velge retter. I de to pakkene vi kan sammenligne direkte, er den dyrere enn HelloFresh og Godtlevert, som også lar dere velge rettene selv.",
+      fitFor:
+        "To eller fire voksne som spiser det meste og klarer seg med tre middager i uken.",
+      difference:
+        "Kokkeløren sender én meny i uken i stedet for en lang meny dere velger fra. Ifølge Kokkeløren lager de sausene selv og bruker navngitte produsenter.",
+      strength:
+        "Menyen er bestemt for dere, og kassen kommer hver uke eller annenhver uke uten binding.",
+      limitation:
+        "Dere kan ikke bytte ut eller velge bort retter, og kassen tilpasses ikke allergier, dietter eller vegetarkost. Det finnes bare tre størrelser, og alltid tre middager.",
+      alternative:
+        "Trenger dere å velge retter selv, unngå bestemte ingredienser, ha fire eller fem middager i uken eller holde prisen nede, passer HelloFresh eller Godtlevert bedre.",
+      homeHeading: "Vil dere heller slippe å velge retter?",
+      homeTeaser:
+        "Kokkeløren sender én fast meny med tre middager i uken, satt sammen av kokken. Det passer for dere som ikke vil bruke tid på menyen, men kassen er dyrere i pakkene vi kan sammenligne og kan ikke tilpasses allergier eller vegetarkost.",
+    },
+  },
+];
+// Core providers only: main comparison, selector and /go/.
+export const providers = catalog.filter(
+  (p): p is Provider => p.tier === "core",
+);
+export const editorialProviders = catalog.filter(
+  (p): p is Provider<EditorialProviderId> & { editorial: EditorialProfile } =>
+    p.tier === "editorial" && !!p.editorial,
+);
+export const allProviders: Provider<ProviderSlug>[] = [
+  ...providers,
+  ...editorialProviders,
 ];
 export const getProvider = (id: string) => providers.find((p) => p.id === id);
+export const getEditorialProvider = (id: string) =>
+  editorialProviders.find((p) => p.id === id);
 export function isFresh(
   checkedAt: string,
   days: number,
@@ -207,8 +401,14 @@ export function isFresh(
 export function readFact<T>(f: Fact<T>, now = new Date()): T | null {
   return isFresh(f.source.checkedAt, f.reviewAfterDays, now) ? f.value : null;
 }
+export function readOptional<T>(
+  f: Fact<T> | undefined,
+  now = new Date(),
+): T | null {
+  return f ? readFact(f, now) : null;
+}
 export function getQuote(
-  p: Provider,
+  p: Provider<ProviderSlug>,
   people: number,
   meals: number,
   now = new Date(),
@@ -247,7 +447,7 @@ export const formatServing = (amount: number) =>
     maximumFractionDigits: 2,
   }).format(amount) + " kr";
 export const formatDate = (d: string) => d.split("-").reverse().join(".");
-export function providerSources(p: Provider): Source[] {
+export function providerSources(p: Provider<ProviderSlug>): Source[] {
   const all = [
     ...p.sources,
     p.people.source,
@@ -258,6 +458,8 @@ export function providerSources(p: Provider): Source[] {
     p.vegetarian.source,
     p.flexibility.source,
     p.delivery.source,
+    ...(p.coverage ? [p.coverage.source] : []),
+    ...(p.deliveryWindows ? [p.deliveryWindows.source] : []),
     ...p.quotes.flatMap((q) => [q.source, q.deliverySource]),
   ];
   return [...new Map(all.map((s) => [s.url, s])).values()];

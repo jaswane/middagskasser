@@ -8,10 +8,14 @@ import { ArrowRight } from "lucide-react";
 import { PageIntro, Sibling, Brand } from "@/components/chrome";
 import { Comparison } from "@/components/comparison";
 import { ProviderPage } from "@/components/provider-page";
+import { EditorialProviderPage } from "@/components/editorial-provider-page";
 import { OfferBox } from "@/components/offer";
 import { ConsentSettings } from "@/components/analytics";
 import {
   getProvider,
+  getEditorialProvider,
+  editorialProviders,
+  allProviders,
   providers,
   providerSources,
   readFact,
@@ -20,10 +24,8 @@ import {
 } from "@/lib/data";
 import { affiliateFlags } from "@/lib/commercial";
 export const dynamic = "force-dynamic";
-const pages: Record<
-  string,
-  { title: string; description: string; eyebrow: string }
-> = {
+type PageInfo = { title: string; description: string; eyebrow: string };
+const corePages: Record<string, PageInfo> = {
   hellofresh: {
     title: "HelloFresh: pris, utvalg og begrensninger",
     description:
@@ -79,6 +81,20 @@ const pages: Record<
     eyebrow: "INTERNT PRODUKT- OG DESIGNUTKAST",
   },
 };
+// Editorial providers get a page from their own data, like any other page.
+const pages: Record<string, PageInfo> = {
+  ...corePages,
+  ...Object.fromEntries(
+    editorialProviders.map((e) => [
+      e.id,
+      {
+        title: e.editorial.title,
+        description: e.editorial.metaDescription,
+        eyebrow: "LEVERANDØR",
+      },
+    ]),
+  ),
+};
 export function generateStaticParams() {
   return Object.keys(pages).map((slug) => ({ slug }));
 }
@@ -128,6 +144,14 @@ export default async function Page({
       <>
         <PageSchema path={`/${slug}`} title={p.title} />
         <ProviderPage provider={provider} />
+      </>
+    );
+  const editorial = getEditorialProvider(slug);
+  if (editorial)
+    return (
+      <>
+        <PageSchema path={`/${slug}`} title={p.title} />
+        <EditorialProviderPage provider={editorial} />
       </>
     );
   return (
@@ -243,13 +267,24 @@ export default async function Page({
 function Method() {
   return (
     <div className="prose">
-      <h2>Vi sammenligner to leverandører</h2>
+      <h2>Hvilke matkasser vi tar med</h2>
       <p>
-        Utvalget er foreløpig Godtlevert og HelloFresh. Begge tilbyr matkasser i
-        Norge, har tilgjengelig produktdokumentasjon og er med i eierens
-        bekreftede affiliategrunnlag. Dette er ikke en kartlegging av hele
-        markedet. Flere kan tas inn hvis de tilfører sammenligningen verdi, også
-        uten affiliateavtale.
+        Hovedsammenligningen og matkassevelgeren dekker Godtlevert og
+        HelloFresh. Begge lar dere velge mellom flere porsjonsstørrelser og
+        antall middager, så vi kan sammenligne like pakker på pris, utvalg og
+        vilkår. Dette er ikke en kartlegging av hele markedet.
+      </p>
+      <p>
+        Vi omtaler også matkasser vi ikke har noen kommersiell avtale med, når
+        de er et reelt alternativ. Den første er{" "}
+        <Link href="/kokkeloren">Kokkeløren</Link>. Om vi har en annonseavtale
+        med en leverandør, avgjør ikke om den blir tatt med.
+      </p>
+      <p>
+        Ikke alle matkasser passer i velgeren eller i en direkte prisduell.
+        Kokkeløren har én fast meny og alltid tre middager. Derfor sammenligner
+        vi bare det som faktisk lar seg sammenligne: pris for to og fire
+        porsjoner med tre middager, valg av retter, binding og levering.
       </p>
       <h2>Samme kriterier, alfabetisk rekkefølge</h2>
       <p>
@@ -266,6 +301,11 @@ function Method() {
       </p>
       <ul>
         <li>HelloFresh: kasse og frakt ble lest sammen for postnummer 0150.</li>
+        <li>
+          Kokkeløren: kassepris og frakt ble lest i bestillingen for postnummer
+          0150 den 08.10.2026. Bare kassene for to og fire voksne regnes med i
+          prissammenligningen.
+        </li>
         <li>
           Godtlevert: ordinær kassepris ble lest i planvalget. Totalen er
           beregnet med standardfrakt fra hjelpesenteret; adressepris er ikke
@@ -316,7 +356,7 @@ function Method() {
       </p>
       <h2>Kilder</h2>
       <ul className="source-list">
-        {providers.flatMap(providerSources).map((s) => (
+        {allProviders.flatMap(providerSources).map((s) => (
           <li key={s.url}>
             <a href={s.url} target="_blank" rel="noopener noreferrer">
               {s.title}

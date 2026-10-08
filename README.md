@@ -39,12 +39,13 @@ Produksjonsserver: `npm.cmd run start` etter et vellykket bygg. Domenet krever e
 
 | Fil | Ansvar |
 | --- | --- |
-| `lib/data.ts` | Leverandørfakta, kilde per felt, priser, frakt, kontrollfrist og tilbud |
+| `lib/data.ts` | Leverandørfakta, kilde per felt, priser, frakt, kontrollfrist og tilbud. `tier` avgjør om en leverandør er med i hovedsammenligning, velger og `/go/` (`core`) eller bare har egen side og omtale (`editorial`) |
 | `lib/selector.ts` | Ren og testbar matchlogikk; ingen tilgang til kommersielle data |
 | `lib/commercial.ts` | Godkjente sentrale destinasjoner og affiliatekonfigurasjon |
 | `components/comparison.tsx` | Sammenligning og pakkevalg, mobil og desktop |
 | `components/selector.tsx` | Tre steg og forklarte resultater |
 | `components/provider-page.tsx` | Felles struktur for leverandørsider |
+| `components/editorial-provider-page.tsx` | Side for redaksjonelle leverandører, med vanlig lenke og uten annonsemerking |
 | `app/[slug]/page.tsx` | Versus-, metode-, tillits- og designoversiktsider |
 | `components/analytics.tsx` | Samtykkestyrt, valgfri analyse; avslått i leveransen |
 | `app/globals.css` | Felles designverdier og responsive komponenter |

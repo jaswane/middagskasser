@@ -86,3 +86,25 @@ Parafrasene er korte og skal ikke oppfattes som leverandørenes markedsføring. 
 Prisene har `checkedAt: 2026-09-28`, `currency: NOK`, `priceType: regular`, `includesDelivery: true` på beregnet total, separat fraktkilde og eksplisitt geografisk forbehold. Skil `observedTotal` (HelloFresh) fra `calculatedStandardTotal` (Godtlevert). `validUntil` skal ikke være oppdiktet fra leverandøren; en intern `reviewDueAt` kan settes 30 dager etter kontroll og brukes til å slå av prisranking når kontroll er forfalt.
 
 Månedlig: pris, standardfrakt, aktive tilbud, utvalg og lenker. Kvartalsvis: porsjons-/middagsvalg, app/funksjoner, pause, frister og leveringsinformasjon. Ved kjent endring: med én gang. Null skal aldri bli null kroner. Manglende eller foreldet data gir nøytralt resultat og «Pris må kontrolleres hos leverandøren». Vis alltid reell kontrolldato per datadel, ikke automatisk dagens dato.
+
+## Kokkeløren (redaksjonell leverandør), kontrollert 08.10.2026
+
+Kokkeløren er tatt med som redaksjonell leverandør (`tier: "editorial"`): egen side og omtale som alternativ, vanlig lenke uten `/go/`, ikke del av velgeren eller hovedsammenligningen. Juridisk enhet: KOKKELØREN AS, org.nr. 917 554 145 (Brønnøysundregistrene; nettstedets bunntekst bruker fortsatt det tidligere navnet Kokkeløren Holding AS).
+
+| Felt | Verdi | Kilde |
+| --- | --- | --- |
+| Modell | Løpende abonnement uten binding; én meny i uken satt sammen av kokken | [Vilkår](https://kokkeloren.no/vilkar-og-garantier) (sist oppdatert 22.05.2026), [Vår matkasse](https://kokkeloren.no/var-matkasse) |
+| Størrelser | 2 voksne, 2 voksne og 2 små barn, 4 voksne | [Spørsmål og svar](https://kokkeloren.no/faq), bestillingen |
+| Middager | Alltid 3 per uke | Vår matkasse |
+| Pris (ordinær) | 1 049 / 1 249 / 1 449 kr per uke; ingen synlig introrabatt | Bestillingen og Vår matkasse |
+| Frakt | Hjemlevering +79 kr for postnummer 0150 | [Bestillingen](https://kokkeloren.no/kasse/abonnement/matkasse) |
+| Valg av retter | Kan ikke byttes eller velges bort | Spørsmål og svar, vilkår («Vi har liten valgfrihet») |
+| Vegetar/allergi | Ikke eget vegetarabonnement; tilpasses ikke allergier eller dietter | Spørsmål og svar |
+| Pause/frist | Pause eller avbestill før søndag kl. 23.59; levering hver uke eller annenhver uke | Spørsmål og svar, vilkår, bestillingen |
+| Levering | «Fra Kristiansand i sør til Alta i nord», fredag–tirsdag etter bosted; for 0150 alle fem dager, vinduer 09–22 | Spørsmål og svar, bestillingen |
+
+Bevisst ikke brukt: pris per porsjon for kassen med små barn (porsjonsantall er ikke oppgitt), frakt utenfor 0150, hvilke områder som bare har hentepunkt, og «raske retter» (Spørsmål og svar oppgir vanligvis 20–60 minutter, produktsiden 25–40 minutter for de fleste retter). Medieomtaler og «prisvinnende» er leverandørens egne påstander og er ikke kontrollert. Ingen offentlig partner- eller affiliateside ble funnet.
+
+Sammenlignbart med HelloFresh og Godtlevert: bare 2 × 3 og 4 × 3 (kassene for 2 og 4 voksne regnes som 2 og 4 porsjoner). Pris kontrolleres månedlig, øvrige fakta kvartalsvis, som for de andre leverandørene.
+
+HelloFresh- og Godtlevert-levering ble samtidig kontrollert på nytt 08.10.2026: Godtlevert oppgir levering til 90 % av husstandene og lørdag/søndag/mandag i de største områdene ([forside](https://www.godtlevert.no/), [leveringstider](https://tips.godtlevert.no/nb/articles/16068360-leveringstider-og-leveringsdager)); HelloFresh oppgir levering «de fleste steder i Norge», lørdag–tirsdag etter bosted ([slik fungerer det](https://www.hellofresh.no/about/how-it-works)).

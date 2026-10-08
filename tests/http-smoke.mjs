@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 const base = process.env.TEST_BASE_URL || "http://127.0.0.1:3000";
-const routes = [
+// The same test covers the preview (noindex) and the live, indexable site.
+const robots = await (await fetch(base + "/robots.txt")).text();
+const live = /Allow: \//.test(robots);
+const noindexRoutes = ["/finn-matkasse", "/designoversikt"];
+const indexable = [
   "/",
   "/hellofresh",
   "/godtlevert",
@@ -10,9 +14,9 @@ const routes = [
   "/kontakt",
   "/personvern",
   "/annonselenker",
-  "/finn-matkasse",
-  "/designoversikt",
+  "/kokkeloren",
 ];
+const routes = [...indexable, ...noindexRoutes];
 const internal = new Set();
 const announcedIcons = new Set();
 for (const path of routes) {
@@ -74,7 +78,13 @@ for (const path of routes) {
         internal.add(href.split("#")[0]);
     }
   }
-  assert.match(html, /name="robots" content="noindex/, path);
+  assert.match(
+    html,
+    live && !noindexRoutes.includes(path)
+      ? /name="robots" content="index, follow"/
+      : /name="robots" content="noindex/,
+    path,
+  );
   assert.match(html, /<link rel="canonical"/, path);
   if (path !== "/kontakt")
     assert.ok(
@@ -139,12 +149,41 @@ assert.equal(
   (await fetch(base + "/go/evil", { redirect: "manual" })).status,
   404,
 );
+// Editorial providers: a plain, direct link and no /go/ redirect or ad label.
+assert.equal(
+  (await fetch(base + "/go/kokkeloren", { redirect: "manual" })).status,
+  404,
+);
+const kokkeloren = await (await fetch(base + "/kokkeloren")).text();
+const direct = kokkeloren.match(
+  /<a[^>]+href="https:\/\/kokkeloren\.no\/"[^>]*>/,
+);
+assert.ok(direct, "Direct link to kokkeloren.no");
+assert.ok(!/rel="[^"]*(sponsored|nofollow)/.test(direct[0]), direct[0]);
+assert.ok(!kokkeloren.includes("/go/kokkeloren"));
+// No ad label by the button and no affiliate disclosure (the footer link
+// "Annonselenker" is fine).
+assert.ok(!kokkeloren.includes("Annonselenke ·"));
+assert.ok(!kokkeloren.includes("Annonse:"));
+assert.match(await (await fetch(base + "/")).text(), /href="\/kokkeloren"/);
 const sitemap = await (await fetch(base + "/sitemap.xml")).text();
 assert.ok(!sitemap.includes("/go/"));
 assert.ok(!sitemap.includes("/designoversikt"));
 assert.ok(!sitemap.includes("/finn-matkasse"));
-assert.match(await (await fetch(base + "/robots.txt")).text(), /Disallow: \//);
-console.log("404, safe redirects, noindex, sitemap and robots: passed");
+if (live) {
+  const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  assert.deepEqual(
+    locs.sort(),
+    indexable.map((p) => "https://middagskasser.no" + p).sort(),
+  );
+  assert.match(robots, /Sitemap: https:\/\/middagskasser\.no\/sitemap\.xml/);
+} else {
+  assert.ok(!sitemap.includes("<loc>"));
+  assert.match(robots, /Disallow: \//);
+}
+console.log(
+  `404, safe redirects, robots and sitemap (${live ? "indexable" : "noindex"} mode): passed`,
+);
 console.log(
   "All internal links, one H1, canonical, metadata, JSON-LD and brand assets: passed",
 );

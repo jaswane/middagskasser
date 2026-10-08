@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { editorialProviders } from "./data.ts";
 export const siteUrl = "https://middagskasser.no";
 export const indexablePaths = [
   "/",
@@ -10,6 +11,8 @@ export const indexablePaths = [
   "/kontakt",
   "/personvern",
   "/annonselenker",
+  // Editorial provider pages are ordinary indexable provider pages.
+  ...editorialProviders.map((e) => "/" + e.id),
 ];
 // Social networks cache the sharing image per URL. The version is the first 8
 // hex characters of the SHA-256 of public/og.png (printed by

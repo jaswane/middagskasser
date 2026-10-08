@@ -60,6 +60,39 @@ test("all required events accept their documented coarse contract", () => {
   for (const [event, params] of Object.entries(events))
     assert.ok(eventParams(event, params), event);
 });
+test("editorial providers are tracked as plain outbound clicks, never as affiliate clicks", () => {
+  assert.ok(
+    eventParams("provider_view", {
+      provider: "kokkeloren",
+      page: "/kokkeloren",
+    }),
+  );
+  assert.ok(
+    eventParams("provider_outbound", {
+      provider: "kokkeloren",
+      page: "/kokkeloren",
+      placement: "provider_bottom",
+      offer_type: "none",
+    }),
+  );
+  assert.equal(
+    eventParams("affiliate_click", {
+      provider: "kokkeloren",
+      page: "/kokkeloren",
+      placement: "provider_bottom",
+      offer_type: "none",
+    }),
+    null,
+  );
+  assert.equal(
+    eventParams("selector_complete", {
+      result_type: "kokkeloren",
+      method_version: METHOD_VERSION,
+    }),
+    null,
+  );
+  assert.equal(measuredPath("/kokkeloren"), "/kokkeloren");
+});
 test("analytics strips extra fields and rejects raw answers, unknown routes and query strings", () => {
   assert.deepEqual(
     eventParams("selector_answer", {
@@ -250,7 +283,8 @@ test("an affiliate URL that is set must still be a valid Adtraction link", () =>
   }
 });
 test("indexable route list and social metadata stay within the approved scope", () => {
-  assert.equal(indexablePaths.length, 9);
+  assert.equal(indexablePaths.length, 10);
+  assert.ok(indexablePaths.includes("/kokkeloren"));
   for (const path of [
     "/finn-matkasse",
     "/designoversikt",

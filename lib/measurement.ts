@@ -36,11 +36,15 @@ export const paths = [
   "/kontakt",
   "/personvern",
   "/annonselenker",
+  "/kokkeloren",
 ];
 export function measuredPath(path: string) {
   return paths.includes(path) ? path : "/404";
 }
-const providers = ["hellofresh", "godtlevert"];
+// Core providers can have affiliate links and selector results. Editorial
+// providers only have a provider page and a plain outbound link.
+const coreProviders = ["hellofresh", "godtlevert"];
+export const pageProviders = [...coreProviders, "kokkeloren"];
 const placements = ["comparison", "selector_result", "provider_bottom"];
 const rules = {
   page_view: { page_path: [...paths, "/404"] },
@@ -50,7 +54,7 @@ const rules = {
     answer_id: ["2", "3", "4", "5", "6", "7", "price", "selection", "none"],
   },
   selector_complete: {
-    result_type: [...providers, "shared_or_uncertain", "no_match"],
+    result_type: [...coreProviders, "shared_or_uncertain", "no_match"],
     method_version: [METHOD_VERSION],
   },
   comparison_view: { page: paths, placement: ["comparison"] },
@@ -58,15 +62,18 @@ const rules = {
     page: paths,
     section: ["details_open", "details_closed"],
   },
-  provider_view: { provider: providers, page: ["/hellofresh", "/godtlevert"] },
+  provider_view: {
+    provider: pageProviders,
+    page: pageProviders.map((id) => "/" + id),
+  },
   affiliate_click: {
-    provider: providers,
+    provider: coreProviders,
     placement: placements,
     page: paths,
     offer_type: ["none"],
   },
   provider_outbound: {
-    provider: providers,
+    provider: pageProviders,
     placement: placements,
     page: paths,
     offer_type: ["none"],

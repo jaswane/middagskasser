@@ -10,6 +10,7 @@ import {
   measuredPath,
   eventParams,
   consentCommands,
+  pageProviders,
   type MeasurementEvent,
 } from "@/lib/measurement";
 declare global {
@@ -139,7 +140,7 @@ export function Analytics() {
     if (choice !== "yes") return;
     track("page_view", { page_path: measuredPath(pathname) });
     const provider = pathname.slice(1);
-    if (["hellofresh", "godtlevert"].includes(provider))
+    if (pageProviders.includes(provider))
       track("provider_view", { provider, page: pathname });
   }, [pathname, choice]);
   useEffect(() => {

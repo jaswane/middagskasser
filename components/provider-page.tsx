@@ -10,6 +10,8 @@ import {
   formatDate,
   formatPrice,
   formatServing,
+  readOptional,
+  editorialProviders,
   type Provider,
 } from "@/lib/data";
 import { destination } from "@/lib/commercial";
@@ -128,6 +130,16 @@ export function ProviderPage({ provider: p }: { provider: Provider }) {
               : "HelloFresh oppgir frister som varierer med leveringsdagen. Første bestilling kan ha særregler."}{" "}
             <a href={p.flexibility.source.url}>Les leverandørens vilkår</a>.
           </p>
+          {(readOptional(p.coverage) || readOptional(p.deliveryWindows)) && (
+            <>
+              <h2>Hvor og når {p.name} leverer</h2>
+              <p>
+                {readOptional(p.coverage)} {readOptional(p.deliveryWindows)} Om
+                dere får levert, ser dere først når dere skriver inn
+                postnummeret hos {p.name}.
+              </p>
+            </>
+          )}
           <h2>Slik kommer dere i gang</h2>
           <ol
             style={{
@@ -163,6 +175,17 @@ export function ProviderPage({ provider: p }: { provider: Provider }) {
               Om annonselenker og hvordan vi finansieres
             </Link>
           </p>
+          {editorialProviders.length > 0 && (
+            <>
+              <h2>Et annet alternativ</h2>
+              {editorialProviders.map((e) => (
+                <p key={e.id}>
+                  {e.editorial.homeTeaser}{" "}
+                  <Link href={`/${e.id}`}>Les om {e.name}</Link>.
+                </p>
+              ))}
+            </>
+          )}
           <h2>Kilder og kontroll</h2>
           <ul className="source-list">
             {[
@@ -172,6 +195,8 @@ export function ProviderPage({ provider: p }: { provider: Provider }) {
                   p.quick.source,
                   p.vegetarian.source,
                   p.delivery.source,
+                  ...(p.coverage ? [p.coverage.source] : []),
+                  ...(p.deliveryWindows ? [p.deliveryWindows.source] : []),
                 ].map((s) => [s.url, s]),
               ).values(),
             ].map((s) => (

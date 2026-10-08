@@ -1,7 +1,7 @@
 "use client";
 import { ArrowUpRight } from "lucide-react";
 import { track } from "./analytics";
-import type { ProviderId } from "@/lib/data";
+import type { EditorialProviderId, ProviderId } from "@/lib/data";
 export function Outbound({
   id,
   name,
@@ -33,6 +33,35 @@ export function Outbound({
       >
         {/* Without a direct affiliate link, /go/ lands on eButikker.no, not the provider. */}
         {affiliate ? `Se pris hos ${name}` : `Til ${name} via eButikker.no`}
+        <ArrowUpRight size={16} />
+      </a>
+    </div>
+  );
+}
+// Plain link straight to a provider we have no commercial relationship with:
+// no /go/ redirect, no sponsored/nofollow and no ad label.
+export function DirectOutbound({
+  id,
+  url,
+}: {
+  id: EditorialProviderId;
+  url: string;
+}) {
+  return (
+    <div className="outbound">
+      <a
+        href={url}
+        className="button button-outline"
+        onClick={() =>
+          track("provider_outbound", {
+            provider: id,
+            placement: "provider_bottom",
+            page: location.pathname,
+            offer_type: "none",
+          })
+        }
+      >
+        Gå til {new URL(url).hostname.replace(/^www\./, "")}
         <ArrowUpRight size={16} />
       </a>
     </div>

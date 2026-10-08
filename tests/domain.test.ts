@@ -2,6 +2,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   providers,
+  editorialProviders,
+  getProvider,
+  getEditorialProvider,
   getQuote,
   activeOffer,
   isFresh,
@@ -135,5 +138,43 @@ test("central outbound destination accepts only configured HTTPS tracking hosts"
   } finally {
     if (old === undefined) delete process.env.HELLOFRESH_AFFILIATE_URL;
     else process.env.HELLOFRESH_AFFILIATE_URL = old;
+  }
+});
+test("editorial providers stay out of the selector, the comparison and /go/", () => {
+  assert.deepEqual(
+    providers.map((p) => p.id),
+    ["godtlevert", "hellofresh"],
+  );
+  assert.ok(providers.every((p) => p.tier === "core"));
+  assert.deepEqual(
+    editorialProviders.map((p) => p.id),
+    ["kokkeloren"],
+  );
+  assert.ok(editorialProviders.every((p) => p.tier === "editorial"));
+  // /go/ only resolves core providers, so there is no redirect for Kokkeløren.
+  assert.equal(getProvider("kokkeloren"), undefined);
+  for (const people of [2, 3, 4])
+    for (const meals of [2, 3, 4, 5])
+      assert.deepEqual(
+        matchProviders(providers, answers(people, meals), now).map(
+          (m) => m.provider.id,
+        ),
+        ["godtlevert", "hellofresh"],
+      );
+});
+test("Kokkeløren facts are sourced, dated and leave unknown fields unknown", () => {
+  const k = getEditorialProvider("kokkeloren")!;
+  const checked = new Date("2026-10-08T12:00:00Z");
+  assert.deepEqual(k.people.value, [2, 4]);
+  assert.deepEqual(k.meals.value, [3]);
+  assert.equal(k.selectionCount.value, null);
+  assert.equal(k.quick.value, null);
+  assert.equal(getQuote(k, 2, 3, checked)!.boxPrice, 1049);
+  assert.equal(getQuote(k, 4, 3, checked)!.boxPrice, 1449);
+  assert.equal(getQuote(k, 4, 3, checked)!.deliveryFee, 79);
+  assert.equal(getQuote(k, 2, 4, checked), null);
+  for (const s of k.sources) {
+    assert.ok(s.url.startsWith("https://kokkeloren.no/"), s.url);
+    assert.equal(s.checkedAt, "2026-10-08");
   }
 });

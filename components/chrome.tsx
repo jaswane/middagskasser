@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight, PackageOpen, ArrowRight } from "lucide-react";
+import { editorialProviders } from "@/lib/data";
 export function Brand({ sibling = false }: { sibling?: boolean }) {
   return (
     <span className="brand">
@@ -51,6 +52,11 @@ export function Footer() {
             <Link href="/finn-matkasse">Matkassevelgeren</Link>
             <Link href="/godtlevert">Godtlevert</Link>
             <Link href="/hellofresh">HelloFresh</Link>
+            {editorialProviders.map((e) => (
+              <Link key={e.id} href={`/${e.id}`}>
+                {e.name}
+              </Link>
+            ))}
           </div>
           <div>
             <strong>Om Middagskasser.no</strong>
