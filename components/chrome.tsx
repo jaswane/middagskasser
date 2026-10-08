@@ -48,6 +48,7 @@ export function Footer() {
         <div className="footer-links">
           <div>
             <strong>Finn din matkasse</strong>
+            <Link href="/matkasser">Alle matkasser</Link>
             <Link href="/hellofresh-vs-godtlevert">Sammenlign de to</Link>
             <Link href="/finn-matkasse">Matkassevelgeren</Link>
             <Link href="/godtlevert">Godtlevert</Link>

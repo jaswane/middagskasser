@@ -9,6 +9,7 @@ import { PageIntro, Sibling, Brand } from "@/components/chrome";
 import { Comparison } from "@/components/comparison";
 import { ProviderPage } from "@/components/provider-page";
 import { EditorialProviderPage } from "@/components/editorial-provider-page";
+import { MarketOverview } from "@/components/market-overview";
 import { OfferBox } from "@/components/offer";
 import { ConsentSettings } from "@/components/analytics";
 import {
@@ -37,6 +38,12 @@ const corePages: Record<string, PageInfo> = {
     description:
       "Se kontrollerte priseksempler, porsjonsvalg og vilkår for Godtlevert. Sammenlign med HelloFresh før du velger.",
     eyebrow: "LEVERANDØR",
+  },
+  matkasser: {
+    title: "Matkasser i Norge: oversikt og forskjeller",
+    description:
+      "Se hvilke matkasser som leverer i Norge, hvem de passer for og hva som skiller dem. Kontrollert mot leverandørenes egne nettsider.",
+    eyebrow: "MARKEDSOVERSIKT",
   },
   "hellofresh-vs-godtlevert": {
     title: "HelloFresh eller Godtlevert?",
@@ -144,6 +151,13 @@ export default async function Page({
       <>
         <PageSchema path={`/${slug}`} title={p.title} />
         <ProviderPage provider={provider} />
+      </>
+    );
+  if (slug === "matkasser")
+    return (
+      <>
+        <PageSchema path="/matkasser" title={p.title} />
+        <MarketOverview />
       </>
     );
   const editorial = getEditorialProvider(slug);
@@ -278,7 +292,8 @@ function Method() {
         Vi omtaler også matkasser vi ikke har noen kommersiell avtale med, når
         de er et reelt alternativ. Den første er{" "}
         <Link href="/kokkeloren">Kokkeløren</Link>. Om vi har en annonseavtale
-        med en leverandør, avgjør ikke om den blir tatt med.
+        med en leverandør, avgjør ikke om den blir tatt med.{" "}
+        <Link href="/matkasser">Se alle matkassene vi har kontrollert</Link>.
       </p>
       <p>
         Ikke alle matkasser passer i velgeren eller i en direkte prisduell.

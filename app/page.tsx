@@ -157,6 +157,11 @@ export default function Home() {
               <Link className="text-link" href={`/${e.id}`}>
                 Les om {e.name} <ArrowRight size={17} />
               </Link>
+              <p>
+                <Link href="/matkasser">
+                  Se alle matkassene vi har kontrollert
+                </Link>
+              </p>
             </div>
           </div>
         </section>

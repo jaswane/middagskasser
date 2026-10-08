@@ -15,6 +15,7 @@ const indexable = [
   "/personvern",
   "/annonselenker",
   "/kokkeloren",
+  "/matkasser",
 ];
 const routes = [...indexable, ...noindexRoutes];
 const internal = new Set();

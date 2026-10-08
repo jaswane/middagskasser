@@ -108,3 +108,24 @@ Bevisst ikke brukt: pris per porsjon for kassen med små barn (porsjonsantall er
 Sammenlignbart med HelloFresh og Godtlevert: bare 2 × 3 og 4 × 3 (kassene for 2 og 4 voksne regnes som 2 og 4 porsjoner). Pris kontrolleres månedlig, øvrige fakta kvartalsvis, som for de andre leverandørene.
 
 HelloFresh- og Godtlevert-levering ble samtidig kontrollert på nytt 08.10.2026: Godtlevert oppgir levering til 90 % av husstandene og lørdag/søndag/mandag i de største områdene ([forside](https://www.godtlevert.no/), [leveringstider](https://tips.godtlevert.no/nb/articles/16068360-leveringstider-og-leveringsdager)); HelloFresh oppgir levering «de fleste steder i Norge», lørdag–tirsdag etter bosted ([slik fungerer det](https://www.hellofresh.no/about/how-it-works)).
+
+## Markedskart, kontrollert 08.10.2026
+
+Grunnlaget for [/matkasser](https://middagskasser.no/matkasser) (`lib/market.ts`). Websøk ble bare brukt til å finne kandidater; alt som publiseres er kontrollert på leverandørens egen nettside eller i Brønnøysundregistrene. Kommersiell relasjon avgjør verken om en tjeneste er med eller hvor den står.
+
+| Tjeneste | Status | Type | På /matkasser | Grunn |
+| --- | --- | --- | --- | --- |
+| Godtlevert, HelloFresh, Kokkeløren | Aktiv | Råvarekasse | Ja, med profil | Fullt kontrollert, se over |
+| God Matlyst (www.godmatlyst.no) | Aktiv | Ferdigmat for eldre | Ja, kompakt | 949 kr (5 middager) / 1 099 kr (7), frakt inkludert, onsdag 12–18, Oslo og omegn, uten binding. Antall personer per leveranse ikke oppgitt. `godmatlyst.no` uten www hadde ugyldig sertifikat ved kontroll. |
+| Fit Me (fitme.no) | Aktiv | Trening/kalorier | Ja, kompakt | Fra 109 kr per måltid, levering fra 125 kr, bare Bergen (Oslo stoppet), uten binding |
+| Trenogmat (trenogmat.no) | Aktiv | Trening/makro | Ja, kompakt | Frosne ferdigmåltider, frakt 109–349 kr, «over 3000 postnummer», uten binding. Priser per måltid ikke funnet på meny- eller pakkesidene |
+| Adams Matkasse | Nedlagt | Råvarekasse | Nevnt som nedlagt | «Adams Matkasse stengte 11. mars 2026. Kontoen din ble flyttet til Godtlevert.» |
+| SpisRiktig (spisriktig.no) | Uklar | Ferdigmat | Nei | Butikken oppga at den var under arbeid (agentkontroll); ikke bekreftet av oss |
+| Hjemmemiddag (hjemmemiddag.no) | Uklar | Ferdigmat | Nei | Pris og område vises ikke før bestilling; utenlandsk selskap |
+| NutriBowl (nutribowl.no) | Uklar | Ferdigmat, plantebasert | Nei | Abonnementene «Out of stock», bunntekst © 2021 |
+| Matkassa Makro (matkassa.no/makro) | Uklar | Makrobokser | Nei | Motstridende priser i butikk og tekst (agentkontroll) |
+| Oda, Dyrket, Rett Hjem Øst | Aktiv | Ikke matkasse | Nei | Nettbutikk/markedsplass, ikke middagskasse |
+| Linas Matkasse, RetNemt, Marley Spoon | – | Råvarekasse | Nei | Ikke tilbudt i Norge |
+| Makroboks, FitKitchen, Sunt Rett Hjem, Matkasse Stavanger, Nettmat, Din Helsemat | Nedlagt eller uklar | – | Nei | Domene borte, under avvikling eller videresendt |
+
+Uklare tjenester er ikke nevnt på nettstedet, fordi vi ikke selv har bekreftet årsaken. Kontroller dem igjen ved neste markedsrunde.

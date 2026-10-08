@@ -11,6 +11,7 @@ export const indexablePaths = [
   "/kontakt",
   "/personvern",
   "/annonselenker",
+  "/matkasser",
   // Editorial provider pages are ordinary indexable provider pages.
   ...editorialProviders.map((e) => "/" + e.id),
 ];

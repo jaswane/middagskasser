@@ -178,3 +178,36 @@ test("Kokkeløren facts are sourced, dated and leave unknown fields unknown", ()
     assert.equal(s.checkedAt, "2026-10-08");
   }
 });
+test("market overview: sourced entries, every profile included, order ignores commercial status", async () => {
+  const { market, marketByType, closed } = await import("../lib/market.ts");
+  const { allProviders } = await import("../lib/data.ts");
+  for (const e of [
+    ...market.flatMap((m) => m.sources),
+    ...closed.map((c) => c.source),
+  ]) {
+    assert.match(e.url, /^https:\/\//, e.url);
+    assert.match(e.checkedAt, /^\d{4}-\d{2}-\d{2}$/, e.url);
+  }
+  for (const p of allProviders)
+    assert.ok(
+      market.some((m) => m.profile === p.id),
+      `${p.id} missing in overview`,
+    );
+  for (const m of market.filter((m) => !m.profile)) assert.ok(m.facts, m.id);
+  const names = (entries: typeof market) =>
+    marketByType(entries).flatMap((g) => g.entries.map((e) => e.name));
+  // Flipping every commercial relationship must not change the order.
+  const flipped = market.map((m) => ({
+    ...m,
+    commercial:
+      m.commercial === "affiliate" ? ("none" as const) : ("affiliate" as const),
+  }));
+  assert.deepEqual(names(flipped), names(market));
+  for (const g of marketByType())
+    assert.deepEqual(
+      g.entries.map((e) => e.name),
+      [...g.entries.map((e) => e.name)].sort((a, b) =>
+        a.localeCompare(b, "nb"),
+      ),
+    );
+});
