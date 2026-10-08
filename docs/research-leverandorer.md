@@ -83,7 +83,7 @@ Parafrasene er korte og skal ikke oppfattes som leverandørenes markedsføring. 
 
 ## Oppdatering og trygg fallback
 
-Prisene har `checkedAt: 2026-09-28`, `currency: NOK`, `priceType: regular`, `includesDelivery: true` på beregnet total, separat fraktkilde og eksplisitt geografisk forbehold. Skil `observedTotal` (HelloFresh) fra `calculatedStandardTotal` (Godtlevert). `validUntil` skal ikke være oppdiktet fra leverandøren; en intern `reviewDueAt` kan settes 30 dager etter kontroll og brukes til å slå av prisranking når kontroll er forfalt.
+Prisene har `checkedAt` per kilde (siste kontroll 08.10.2026, se «Priskontroll samme dag» under), `currency: NOK`, `priceType: regular`, `includesDelivery: true` på beregnet total, separat fraktkilde og eksplisitt geografisk forbehold. Skil `observedTotal` (HelloFresh) fra `calculatedStandardTotal` (Godtlevert). `validUntil` skal ikke være oppdiktet fra leverandøren; en intern `reviewDueAt` kan settes 30 dager etter kontroll og brukes til å slå av prisranking når kontroll er forfalt.
 
 Månedlig: pris, standardfrakt, aktive tilbud, utvalg og lenker. Kvartalsvis: porsjons-/middagsvalg, app/funksjoner, pause, frister og leveringsinformasjon. Ved kjent endring: med én gang. Null skal aldri bli null kroner. Manglende eller foreldet data gir nøytralt resultat og «Pris må kontrolleres hos leverandøren». Vis alltid reell kontrolldato per datadel, ikke automatisk dagens dato.
 
@@ -129,3 +129,57 @@ Grunnlaget for [/matkasser](https://middagskasser.no/matkasser) (`lib/market.ts`
 | Makroboks, FitKitchen, Sunt Rett Hjem, Matkasse Stavanger, Nettmat, Din Helsemat | Nedlagt eller uklar | – | Nei | Domene borte, under avvikling eller videresendt |
 
 Uklare tjenester er ikke nevnt på nettstedet, fordi vi ikke selv har bekreftet årsaken. Kontroller dem igjen ved neste markedsrunde.
+
+## Priskontroll samme dag, 08.10.2026
+
+Alle tre råvarekassene ble kontrollert samme kveld (ca. kl. 22.15–22.25), bare mot leverandørenes egne sider og bestillingsløp. Bare ordinære priser: ingen rabattkode, og bestillingsløpene viste ingen introrabatt (HelloFresh `discount: 0`, Godtlevert `regularPrice = finalPrice`, Kokkeløren `priceBeforeDiscount = price`). Introtilbud som finnes (HelloFresh «Spar opptil 1109 kr», Godtlevert GODMIDDAG2026) er ikke brukt. Ingen personopplysninger ble lagt inn.
+
+### Kassepris uten frakt (kr per uke)
+
+| Leverandør | Porsjoner | 2 middager | 3 middager | 4 middager | 5 middager | Kilde |
+| --- | --- | --- | --- | --- | --- | --- |
+| HelloFresh | 2 | 660 | 770 | 960 | 1 150 | [Planvalg](https://www.hellofresh.no/plans), postnummer 0150 |
+| HelloFresh | 4 | 890 | 1 060 | 1 270 | 1 440 | Samme |
+| Godtlevert | 2 | 690 | 860 | 1 020 | 1 190 | [Velg matkasse](https://www.godtlevert.no/velg-matkasse) |
+| Godtlevert | 3 | 820 | 1 010 | 1 180 | 1 330 | Samme |
+| Godtlevert | 4 | 910 | 1 090 | 1 270 | 1 410 | Samme |
+| Godtlevert | 5 | 1 030 | 1 310 | 1 510 | 1 680 | Samme |
+| Godtlevert | 6 | 1 110 | 1 370 | 1 560 | 1 750 | Samme |
+| Kokkeløren | 2 voksne | – | 1 049 | – | – | [Bestilling](https://kokkeloren.no/kasse/abonnement/matkasse), postnummer 0150 |
+| Kokkeløren | 4 voksne | – | 1 449 | – | – | Samme |
+| Kokkeløren | 2 voksne og 2 små barn | – | 1 249 | – | – | Samme. Porsjonsantall ikke oppgitt |
+
+HelloFresh tilbyr bare 2 og 4 porsjoner, Godtlevert 2–6, begge 2–5 middager. Ingen av dem tilbyr 6 eller 7 middager. Kokkeløren har alltid 3 middager. HelloFresh- og Godtlevert-prisene for 2 og 4 porsjoner er uendret fra 28.09.2026. Fem av Godtlevert-prisene ble i tillegg kontrollert direkte i sidens data (3 × 2, 3 × 3, 2 × 4, 4 × 3, 4 × 4).
+
+Pris per porsjon: HelloFresh viser selv kassepris delt på porsjoner (for eksempel «6 porsjoner til 128,33 kr per porsjon» for 2 × 3), uten frakt. Godtlevert viser bare rabattert porsjonspris, så ordinær porsjonspris er vår egen utregning. Kokkeløren-kassen med små barn har ingen porsjonspris, fordi antallet porsjoner, barnas alder og porsjonsstørrelse ikke er oppgitt noe sted (forside, Vår matkasse, spørsmål og svar, vilkår eller bestilling). Kassen kalles «Liten familie» på produktkortene og «2 voksne og 2 små barn» i bestillingen.
+
+### Frakt for tre postnummer
+
+| Postnummer | HelloFresh | Godtlevert | Kokkeløren |
+| --- | --- | --- | --- |
+| 0150 Oslo | 79 kr | Leverer; frakt ikke vist | 79 kr |
+| 5003 Bergen | 79 kr | Leverer; frakt ikke vist | 79 kr |
+| 7010 Trondheim | 79 kr | Leverer; frakt ikke vist | 79 kr |
+
+- HelloFresh: 79 kr for alle åtte kassestørrelser på alle tre postnummer. Planvalget har forbeholdet «Det kan være leveringsgebyr for noen områder». Enkelte leveringstidspunkter koster ekstra. Ifølge [spørsmål og svar](https://www.hellofresh.no/about/faq) varierer tillegget fra uke til uke. Leveringsdataene viste +30 kr for mandagsvinduet i 7010. Det tallet er bare sett i sidens data, ikke som synlig tekst, og er ikke publisert.
+- Godtlevert: Den offentlige [leveringssjekken](https://www.godtlevert.no/hvor-leverer-godtlevert) viser dager og tidsvinduer for alle tre postnummer, men ikke frakt. Adressepris vises først etter at det er opprettet en konto. Oppgitt standardfrakt er 79 kr ([avgifter](https://tips.godtlevert.no/nb/articles/16068043-avgifter-og-prisjusteringer), endret 06.10.2026: «Fra uke 32 økes leveringsgebyret til 79 kr»). Gullkunder får frakten inkludert. Om frakten varierer med område, er ikke dokumentert.
+- Kokkeløren: Hjemlevering (+79 kr) var eneste valg på alle tre postnummer og for alle tre størrelser. Første mulige levering var 17.–19. oktober, etter postnummer.
+
+Ingen av disse fraktprisene skal presenteres som nasjonal pris. Tre postnummer i tre storbyer sier ingenting om distriktene.
+
+### Tilleggspriser
+
+- HelloFresh: Spesialretter («Premium ingredienser», «Flere typer protein», «Større porsjon» med flere) koster mer per porsjon og belastes separat ([spørsmål og svar](https://www.hellofresh.no/about/faq)). Beløpene er ikke synlige på menysiden. Sidens data har beløp som trolig er øre (24,95–69,95 kr), men enheten er ikke dokumentert, så de er ikke brukt.
+- Godtlevert: Pluspris på enkelte retter med dyrere råvarer, i tillegg til kasseprisen ([avgifter](https://tips.godtlevert.no/nb/articles/16068043-avgifter-og-prisjusteringer), eksempel «+65,00 kr»). Beløpene per rett er ikke publisert samlet.
+- Kokkeløren: Ingen tilleggspriser funnet. Rettene kan ikke velges.
+
+### Sammenlignbare kombinasjoner
+
+- Alle tre: 2 × 3 og 4 × 3 (Kokkeløren-kassene for 2 og 4 voksne regnet som 2 og 4 porsjoner).
+- HelloFresh og Godtlevert: alle åtte kombinasjonene 2 og 4 porsjoner × 2–5 middager.
+- Bare Godtlevert: 3, 5 og 6 porsjoner (12 kombinasjoner). Ingen å sammenligne med.
+- Ikke sammenlignbart: Kokkeløren-kassen med små barn (porsjoner ikke oppgitt), alt med 6–7 middager eller 7+ porsjoner (ingen tilbyr det), og totalpris med Godtleverts faktiske adressefrakt (skjult bak konto).
+
+### Beslutning om /matkasse-pris: ikke klar
+
+Et prisverktøy krever minst tre råvarekasser som kan sammenlignes på flere reelle kombinasjoner, en forklarbar totalpris, ærlig håndtert frakt, priser kontrollert samme dag og tydelig fallback. Det første kravet er ikke oppfylt: alle tre kan sammenlignes på bare to kombinasjoner, og i begge er Kokkeløren-porsjonene en tolkning av «voksne». Godtleverts adressefrakt er dessuten ukjent, og tilleggsprisene til HelloFresh og Godtlevert kan ikke tallfestes. Dataene er lagret i `lib/data.ts` (`quotes`, `deliverySamples`, `surcharge`), så verktøyet kan vurderes på nytt når en fjerde sammenlignbar råvarekasse er kontrollert, eller når Godtlevert viser frakt uten konto.

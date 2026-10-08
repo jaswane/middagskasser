@@ -27,6 +27,10 @@ for (const p of providers) {
     for (const meals of [2, 3, 4, 5])
       if (!getQuote(p, people, meals))
         errors.push(`${p.id}: pris ${people} x ${meals} må kontrolleres.`);
+  // Other registered sizes, such as Godtlevert's 3, 5 and 6 portions.
+  for (const q of p.quotes)
+    if (q.people !== 2 && q.people !== 4 && !getQuote(p, q.people, q.meals))
+      errors.push(`${p.id}: pris ${q.people} x ${q.meals} må kontrolleres.`);
 }
 // Editorial providers: every fact and price shown on their page must be fresh.
 for (const p of editorialProviders) {

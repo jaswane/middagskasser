@@ -16,6 +16,12 @@ At en fil er lastet ned fra leverandørens egen side eller presserom, dokumenter
 
 Opprinnelsen til HelloFresh- og Godtlevert-filene er også beskrevet i [kildekontrollen fra produksjonssprinten](../production-sprint/kildekontroll.md), med sjekksummer i [brand-hashes.json](../production-sprint/brand-hashes.json).
 
+## Kontroll av partnervilkår, 08.10.2026
+
+Adtractions offentlige [partneravtale](https://adtraction.com/partner-agreement/) (ingen versjonsdato, «Adtraction 2026» i bunnteksten) gir ingen rett til annonsørenes logoer eller varemerker. Den handler bare om Adtractions egen tjeneste («The Partner does not, through this Partner Agreement, acquire any copyright or license associated with the Service»). Ansvaret for innholdet ligger hos partneren: «The Partner bears responsibility for ensuring that the rights to all content on the Partner channel». Annonsørspesifikke vilkår finnes bare i Adtractions system, bak innlogging.
+
+Konklusjon: Ingen offentlig kilde gir oss rett til å bruke HelloFresh- eller Godtlevert-logoen. Det kan finnes et grunnlag i programvilkårene for HelloFresh og Godtlevert inne i eiers Adtraction-konto. Det må eier kontrollere: åpne programmet, se etter «annonsemateriell», «logo» eller «varemerke», og noter vilkår og dato her. Logoene er ikke fjernet i denne runden, fordi dette ikke er avklart.
+
 ## Åpen beslutning
 
 HelloFresh- og Godtlevert-logoene er i bruk uten dokumentert rettighetsgrunnlag. Det bryter regelen over. To måter å lukke dette på:

@@ -12,23 +12,58 @@ import {
 } from "../lib/data.ts";
 import { matchProviders, resultTitle, type Answers } from "../lib/selector.ts";
 import { destination } from "../lib/commercial.ts";
-const now = new Date("2026-09-28T12:00:00Z");
+// Same day as the latest price check.
+const now = new Date("2026-10-08T12:00:00Z");
 const answers = (
   people = 4,
   meals = 3,
   priority: Answers["priority"] = "price",
 ): Answers => ({ people, meals, priority });
 test("documented quotes preserve total, size, and delivery provenance", () => {
-  assert.equal(providers.flatMap((p) => p.quotes).length, 16);
+  assert.equal(providers.flatMap((p) => p.quotes).length, 28);
   assert.equal(getQuote(providers[0], 4, 3, now)!.boxPrice + 79, 1169);
   assert.equal(getQuote(providers[1], 2, 3, now)!.boxPrice + 79, 849);
-  assert.equal(getQuote(providers[0], 3, 3, now), null);
+  assert.equal(getQuote(providers[0], 3, 3, now)!.boxPrice, 1010);
+  assert.equal(getQuote(providers[1], 3, 3, now), null);
   assert.equal(getQuote(providers[0], 4, 3, now)!.basis, "calculated-standard");
+});
+test("Godtlevert has a dated price for every offered size and nothing beyond", () => {
+  const g = getProvider("godtlevert")!;
+  for (const people of [2, 3, 4, 5, 6])
+    for (const meals of [2, 3, 4, 5]) {
+      const q = getQuote(g, people, meals, now);
+      assert.ok(q, `${people} x ${meals}`);
+      assert.equal(q.source.checkedAt, "2026-10-08");
+    }
+  assert.equal(getQuote(g, 7, 3, now), null);
+  assert.equal(getQuote(g, 4, 6, now), null);
+});
+test("prices disappear everywhere when the check is older than 30 days", () => {
+  const expired = new Date("2026-11-08T12:00:00Z");
+  for (const p of [...providers, ...editorialProviders])
+    for (const q of p.quotes)
+      assert.equal(getQuote(p, q.people, q.meals, expired), null);
+  const m = matchProviders(providers, answers(), expired);
+  assert.ok(m.every((x) => x.priceQuote === null && x.score === 0));
+});
+test("delivery samples are tied to a postcode and never stand in for a fee", () => {
+  for (const p of [...providers, ...editorialProviders]) {
+    assert.deepEqual(
+      p.deliverySamples?.map((s) => s.postcode),
+      ["0150", "5003", "7010"],
+    );
+    for (const s of p.deliverySamples!)
+      assert.equal(s.source.checkedAt, "2026-10-08");
+  }
+  // Godtlevert hides the address fee, so its samples have no fee.
+  assert.ok(
+    getProvider("godtlevert")!.deliverySamples!.every((s) => s.fee === null),
+  );
 });
 test("price preference can change with package and ties stay equal", () => {
   const a = matchProviders(providers, answers(), now);
   assert.equal(a[1].score, 1);
-  assert.equal(a[1].priceQuote?.source.checkedAt, "2026-09-28");
+  assert.equal(a[1].priceQuote?.source.checkedAt, "2026-10-08");
   const b = matchProviders(providers, answers(4, 5), now);
   assert.equal(b[0].score, 1);
   const c = matchProviders(providers, answers(4, 4), now);
@@ -113,11 +148,12 @@ test("offer requires real valid dates, fresh checking, and an unexpired interval
     lastChecked: "2026-09-28",
     reviewAfterDays: 1,
   };
-  assert.equal(activeOffer(o, now), o);
+  const during = new Date("2026-09-28T12:00:00Z");
+  assert.equal(activeOffer(o, during), o);
   assert.equal(activeOffer(o, new Date("2026-09-29T00:00:00Z")), null);
-  assert.equal(activeOffer({ ...o, validUntil: "invalid" }, now), null);
-  assert.equal(activeOffer({ ...o, lastChecked: "2026-08-01" }, now), null);
-  assert.equal(activeOffer(null, now), null);
+  assert.equal(activeOffer({ ...o, validUntil: "invalid" }, during), null);
+  assert.equal(activeOffer({ ...o, lastChecked: "2026-08-01" }, during), null);
+  assert.equal(activeOffer(null, during), null);
   assert.equal(isFresh("invalid", 30, now), false);
 });
 test("central outbound destination accepts only configured HTTPS tracking hosts", () => {

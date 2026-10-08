@@ -334,7 +334,11 @@ test("all 72 selector combinations are deterministic and never assign two winner
     for (const meals of [2, 3, 4, 5])
       for (const priority of ["price", "selection", "none"] as const) {
         const answers: Answers = { people, meals, priority };
-        const matches = matchProviders(providers, answers, new Date(now));
+        const matches = matchProviders(
+          providers,
+          answers,
+          new Date("2026-10-08T12:00:00Z"),
+        );
         assert.equal(matches.length, 2);
         assert.ok(matches.filter((m) => m.score > 0).length <= 1);
         assert.ok(
