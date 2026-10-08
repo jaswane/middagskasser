@@ -126,7 +126,8 @@ Grunnlaget for [/matkasser](https://middagskasser.no/matkasser) (`lib/market.ts`
 | Matkassa Makro (matkassa.no/makro) | Uklar | Makrobokser | Nei | Motstridende priser i butikk og tekst (agentkontroll) |
 | Oda, Dyrket, Rett Hjem Øst | Aktiv | Ikke matkasse | Nei | Nettbutikk/markedsplass, ikke middagskasse |
 | Linas Matkasse, RetNemt, Marley Spoon | – | Råvarekasse | Nei | Ikke tilbudt i Norge |
-| Makroboks, FitKitchen, Sunt Rett Hjem, Matkasse Stavanger, Nettmat, Din Helsemat | Nedlagt eller uklar | – | Nei | Domene borte, under avvikling eller videresendt |
+| Nettmat (nettmat.no) | Nedlagt | Råvarekasse | Nevnt som nedlagt (fra 08.10.2026) | Nettmat AS (Stavanger) skrev på sin offentlige [Facebook-side](https://www.facebook.com/nettmat.no/) 13.05.2022: «Det er med et veldig tungt hjerte vi nå må meddele at Nettmat AS har begjært oppbud.» nettmat.no tilbyr i dag bare domenet til salgs (DIBB AS, sett 08.10.2026). Nettmat AS finnes ikke i Enhetsregisterets aktive register. Konkursdato er ikke bekreftet i registeret. |
+| Makroboks, FitKitchen, Sunt Rett Hjem, Matkasse Stavanger, Din Helsemat | Nedlagt eller uklar | – | Nei | Domene borte, under avvikling eller videresendt |
 
 Uklare tjenester er ikke nevnt på nettstedet, fordi vi ikke selv har bekreftet årsaken. Kontroller dem igjen ved neste markedsrunde.
 
@@ -183,3 +184,7 @@ Ingen av disse fraktprisene skal presenteres som nasjonal pris. Tre postnummer i
 ### Beslutning om /matkasse-pris: ikke klar
 
 Et prisverktøy krever minst tre råvarekasser som kan sammenlignes på flere reelle kombinasjoner, en forklarbar totalpris, ærlig håndtert frakt, priser kontrollert samme dag og tydelig fallback. Det første kravet er ikke oppfylt: alle tre kan sammenlignes på bare to kombinasjoner, og i begge er Kokkeløren-porsjonene en tolkning av «voksne». Godtleverts adressefrakt er dessuten ukjent, og tilleggsprisene til HelloFresh og Godtlevert kan ikke tallfestes. Dataene er lagret i `lib/data.ts` (`quotes`, `deliverySamples`, `surcharge`), så verktøyet kan vurderes på nytt når en fjerde sammenlignbar råvarekasse er kontrollert, eller når Godtlevert viser frakt uten konto.
+
+### Prishistorikk
+
+Hvert pristilbud i `lib/data.ts` har et valgfritt felt `history` med tidligere kontroller (dato, kassepris, frakt). Ved kontrollen 08.10.2026 var prisene for 2 og 4 porsjoner hos HelloFresh og Godtlevert identiske med 28.09.2026, og den kontrollen er registrert som historikk. Godtlevert 3, 5 og 6 porsjoner og Kokkeløren har bare én kontroll. Ved neste kontroll: flytt gjeldende pris til `history` før den oppdateres hvis prisen er endret, eller legg til datoen i `history` hvis den er uendret.

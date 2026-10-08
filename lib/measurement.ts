@@ -39,6 +39,7 @@ export const paths = [
   "/kokkeloren",
   "/matkasser",
   "/beste-matkasse",
+  "/billigste-matkasse",
 ];
 export function measuredPath(path: string) {
   return paths.includes(path) ? path : "/404";

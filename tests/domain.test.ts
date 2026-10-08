@@ -298,3 +298,61 @@ test("best-by-need conclusions follow the data and disappear when it expires", a
   );
   assert.equal(later.premium.length, 0);
 });
+test("cheapest guide follows the price data and hides expired prices", async () => {
+  const { cheapest } = await import("../lib/cheapest.ts");
+  const c = cheapest(now);
+  // Lowest weekly total: HelloFresh 2 × 2, 660 + 79 kr delivery.
+  assert.equal(c.lowestTotal!.provider.id, "hellofresh");
+  assert.deepEqual(
+    [
+      c.lowestTotal!.quote.people,
+      c.lowestTotal!.quote.meals,
+      c.lowestTotal!.total,
+    ],
+    [2, 2, 739],
+  );
+  // Lowest per portion: Godtlevert 6 × 5, (1 750 + 79) / 30.
+  assert.equal(c.lowestPerPortion!.provider.id, "godtlevert");
+  assert.equal(c.lowestPerPortion!.total, 1829);
+  assert.equal(c.lowestPerPortion!.portions, 30);
+  assert.equal(c.lowestPerPortion!.perPortion.toFixed(2), "60.97");
+  // Sizes only Godtlevert offers are not compared with anyone.
+  for (const s of c.bySize.filter((s) => [3, 5, 6].includes(s.people))) {
+    assert.deepEqual(
+      s.offering.map((p) => p.id),
+      ["godtlevert"],
+    );
+    assert.ok(s.rows.every((r) => r.cells.every((x) => !x.cheapest)));
+  }
+  // Four portions, four dinners: a tie marks both as cheapest.
+  const four = c.bySize.find((s) => s.people === 4)!;
+  const row = four.rows.find((r) => r.meals === 4)!;
+  assert.deepEqual(
+    row.cells.map((x) => x.cheapest),
+    [true, true, false],
+  );
+  // Kokkeløren only appears with the two adult sizes and three dinners.
+  assert.deepEqual(
+    c.all.filter((x) => x.provider.id === "kokkeloren").map(size),
+    ["2x3", "4x3"],
+  );
+  // 2 and 4 portions at HelloFresh and Godtlevert were unchanged since 28.09.
+  assert.equal(c.unchanged.length, 16);
+  assert.deepEqual(c.earlier, ["2026-09-28"]);
+  const later = cheapest(new Date("2026-11-08T12:00:00Z"));
+  assert.equal(later.lowestTotal, null);
+  assert.equal(later.all.length, 0);
+  function size(x: { quote: { people: number; meals: number } }) {
+    return `${x.quote.people}x${x.quote.meals}`;
+  }
+});
+test("closed services are sourced and Nettmat cites its own announcement", async () => {
+  const { closed } = await import("../lib/market.ts");
+  const nettmat = closed.find((c) => c.name === "Nettmat")!;
+  assert.match(
+    nettmat.source.url,
+    /^https:\/\/www\.facebook\.com\/nettmat\.no/,
+  );
+  assert.match(nettmat.note, /13\. mai 2022/);
+  assert.ok(nettmat.sourceLabel);
+});

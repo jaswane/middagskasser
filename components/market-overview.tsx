@@ -217,6 +217,10 @@ export function PriceExamples() {
           `Hos ${listJoin(surcharge)} koster enkelte retter ekstra. `}
         Totalen kan også endre seg med adresse og leveringstidspunkt.
       </p>
+      <p>
+        Lavest ukepris, lavest pris per porsjon og priser for flere størrelser:{" "}
+        <Link href="/billigste-matkasse">Billigste matkasse</Link>.
+      </p>
     </section>
   );
 }
@@ -302,10 +306,13 @@ export function MarketOverview() {
             {closed.map((c) => (
               <p key={c.name}>
                 {c.name} {c.note}, ifølge{" "}
-                <a href={c.source.url}>{c.name}s egen nettside</a> (kontrollert{" "}
-                {formatDate(c.source.checkedAt)}).
+                <a href={c.source.url}>
+                  {c.sourceLabel ?? `${c.name}s egen nettside`}
+                </a>{" "}
+                (kontrollert {formatDate(c.source.checkedAt)}).
               </p>
             ))}
+            <p>Matkassene som leverer i dag, står i oversikten over.</p>
           </>
         )}
         <h2>Vil dere sammenligne direkte?</h2>

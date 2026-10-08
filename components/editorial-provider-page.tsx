@@ -78,6 +78,10 @@ export function EditorialProviderPage({
                 ikke noe introtilbud ved kontrollen{" "}
                 {formatDate(prices[0].source.checkedAt)}.
               </p>
+              <p>
+                Priser for alle størrelser hos de tre matkassene:{" "}
+                <Link href="/billigste-matkasse">Billigste matkasse</Link>.
+              </p>
             </>
           ) : (
             <p>

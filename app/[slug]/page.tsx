@@ -11,6 +11,7 @@ import { ProviderPage } from "@/components/provider-page";
 import { EditorialProviderPage } from "@/components/editorial-provider-page";
 import { MarketOverview } from "@/components/market-overview";
 import { BestByNeed } from "@/components/best-by-need";
+import { CheapestGuide } from "@/components/cheapest-guide";
 import { OfferBox } from "@/components/offer";
 import { ConsentSettings } from "@/components/analytics";
 import {
@@ -51,6 +52,12 @@ const corePages: Record<string, PageInfo> = {
     description:
       "HelloFresh, Godtlevert eller Kokkeløren? Se hvilken matkasse som peker seg ut for pris, størrelse og menyvalg, basert på kontrollerte priser og vilkår.",
     eyebrow: "BESTE VALG ETTER BEHOV",
+  },
+  "billigste-matkasse": {
+    title: "Billigste matkasse: ordinære priser sammenlignet",
+    description:
+      "Se laveste ukepris, laveste pris per porsjon og pris for to til seks porsjoner hos HelloFresh, Godtlevert og Kokkeløren. Ordinær pris, uten introtilbud.",
+    eyebrow: "ORDINÆR PRIS, UTEN KAMPANJE",
   },
   "hellofresh-vs-godtlevert": {
     title: "HelloFresh eller Godtlevert?",
@@ -158,6 +165,13 @@ export default async function Page({
       <>
         <PageSchema path={`/${slug}`} title={p.title} />
         <ProviderPage provider={provider} />
+      </>
+    );
+  if (slug === "billigste-matkasse")
+    return (
+      <>
+        <PageSchema path="/billigste-matkasse" title={p.title} />
+        <CheapestGuide />
       </>
     );
   if (slug === "beste-matkasse")

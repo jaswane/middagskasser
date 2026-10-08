@@ -152,6 +152,10 @@ export function ProviderPage({ provider: p }: { provider: Provider }) {
                 <a href={fresh[0].source.url}>Kilde til kasseprisen</a> ·{" "}
                 <a href={fee.deliverySource.url}>Kilde til frakten</a>
               </p>
+              <p>
+                Hvem som er billigst for deres størrelse, også per porsjon:{" "}
+                <Link href="/billigste-matkasse">Billigste matkasse</Link>.
+              </p>
             </>
           ) : (
             <p>

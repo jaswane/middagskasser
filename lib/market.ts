@@ -184,7 +184,13 @@ export const market: MarketEntry[] = [
   },
 ];
 // Recently closed services that people may still search for.
-export const closed: { name: string; note: string; source: Source }[] = [
+export const closed: {
+  name: string;
+  note: string;
+  source: Source;
+  // How the source is named in the text; defaults to the service's website.
+  sourceLabel?: string;
+}[] = [
   {
     name: "Adams Matkasse",
     note: "stengte 11. mars 2026, og kundekontoene ble flyttet til Godtlevert",
@@ -193,6 +199,18 @@ export const closed: { name: string; note: string; source: Source }[] = [
       "Adams Matkasse – melding om nedleggelse",
       "2026-10-08",
     ),
+  },
+  {
+    // The company's own public post, 13 May 2022. nettmat.no now only offers
+    // the domain for sale (checked 2026-10-08).
+    name: "Nettmat",
+    note: "er nedlagt. Selskapet bak, Nettmat AS fra Stavanger, meldte 13. mai 2022 at det hadde begjært oppbud",
+    source: s(
+      "https://www.facebook.com/nettmat.no/",
+      "Nettmat – Facebook-side, innlegg 13.05.2022",
+      "2026-10-08",
+    ),
+    sourceLabel: "Nettmats egen Facebook-side",
   },
 ];
 // Within each type the order is alphabetical. It is not a recommendation.

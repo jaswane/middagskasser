@@ -7,9 +7,71 @@ import {
   formatPrice,
   numberWord,
   readFact,
+  getQuote,
   editorialProviders,
+  type Provider,
+  type ProviderSlug,
 } from "@/lib/data";
 import { bestByNeed, type Mark } from "@/lib/best";
+import { market } from "@/lib/market";
+// The smallest box each råvarekasse sells, from fresh data only.
+function smallestBoxes(kits: Provider<ProviderSlug>[]) {
+  return kits.map((p) => {
+    const people = readFact(p.people),
+      meals = readFact(p.meals);
+    const q = people && meals ? getQuote(p, people[0], meals[0]) : null;
+    return {
+      provider: p,
+      people: people?.[0] ?? null,
+      meals: meals?.[0] ?? null,
+      total: q && q.deliveryFee !== null ? q.boxPrice + q.deliveryFee : null,
+    };
+  });
+}
+function OnePerson({ kits }: { kits: Provider<ProviderSlug>[] }) {
+  const boxes = smallestBoxes(kits);
+  if (boxes.some((b) => b.people === null || b.people < 2)) return null;
+  const priced = boxes.filter((b) => b.total !== null && b.meals === 2);
+  const fixed = boxes.filter((b) => b.provider.tier === "editorial");
+  const fit = market.find((m) => m.id === "fitme");
+  return (
+    <>
+      <h2>Matkasse for én person</h2>
+      <p>
+        Ingen av de tre råvarekassene har en kasse for én porsjon. Den minste
+        kassen er for to porsjoner
+        {priced.length > 0 ? " og to middager." : "."}
+        {priced.length > 0 &&
+          ` Med frakt koster den ${priced
+            .map(
+              (b, i) =>
+                `${formatPrice(b.total!)}${i === 0 ? " i uken" : ""} hos ${b.provider.name}`,
+            )
+            .join(" og ")}.`}
+        {fixed.map((b) => (
+          <span key={b.provider.id}>
+            {" "}
+            {b.provider.name}s minste kasse er for to voksne og{" "}
+            {numberWord(b.meals!)} middager.
+          </span>
+        ))}
+      </p>
+      <p>
+        En kasse for to gir to porsjoner av hver middag. Om den andre porsjonen
+        passer som middag dagen etter, må du vurdere selv. Vi har ikke undersøkt
+        hvordan rettene holder seg.
+      </p>
+      {fit && (
+        <p>
+          Vil du heller ha ferdige enkeltmåltider, selger {fit.name} det fra 109
+          kr per måltid, men leverer bare i Bergen (kontrollert{" "}
+          {formatDate(fit.checkedAt)}).{" "}
+          <Link href={`/matkasser#${fit.id}`}>Se {fit.name} i oversikten</Link>.
+        </p>
+      )}
+    </>
+  );
+}
 const markText: Record<Mark, string> = {
   best: "Peker seg ut",
   yes: "Ja",
@@ -218,6 +280,7 @@ export function BestByNeed() {
                 </p>
               </article>
             )}
+            <OnePerson kits={kits} />
             <PriceExamples />
             <p>
               Priser for alle kassestørrelser står på sidene om{" "}

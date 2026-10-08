@@ -15,6 +15,12 @@ export type Fact<T> = {
   reviewAfterDays: number;
   note?: string;
 };
+// A price as seen at one earlier check. Never shown as the current price.
+export type PricePoint = {
+  checkedAt: string;
+  boxPrice: number;
+  deliveryFee: number | null;
+};
 export type Quote = {
   people: number;
   meals: number;
@@ -27,6 +33,9 @@ export type Quote = {
   currency: "NOK";
   source: Source;
   reviewAfterDays: number;
+  // Earlier checks, oldest first. When a check finds a new price, move the
+  // current values here before updating them.
+  history?: PricePoint[];
 };
 export type DeliverySample = {
   postcode: string;
@@ -164,9 +173,18 @@ function fact<T>(value: T | null, source: Source, note?: string): Fact<T> {
   return { value, source, reviewAfterDays: 90, note };
 }
 // Each row is one portion size with box prices for 2, 3, 4 and 5 dinners.
-function quotes(id: ProviderId, rows: [number, number[]][]): Quote[] {
+// `same` lists earlier checks that found the same box price and fee for the
+// given portion sizes.
+function quotes(
+  id: ProviderId,
+  rows: [number, number[]][],
+  same: { checkedAt: string; people: number[] }[] = [],
+): Quote[] {
   return rows.flatMap(([people, values]) =>
     values.map((boxPrice, j) => ({
+      history: same
+        .filter((s) => s.people.includes(people))
+        .map((s) => ({ checkedAt: s.checkedAt, boxPrice, deliveryFee: 79 })),
       people,
       meals: j + 2,
       boxPrice,
@@ -263,13 +281,18 @@ const catalog: Provider<ProviderSlug>[] = [
       ),
       reviewAfterDays: 30,
     },
-    quotes: quotes("godtlevert", [
-      [2, [690, 860, 1020, 1190]],
-      [3, [820, 1010, 1180, 1330]],
-      [4, [910, 1090, 1270, 1410]],
-      [5, [1030, 1310, 1510, 1680]],
-      [6, [1110, 1370, 1560, 1750]],
-    ]),
+    quotes: quotes(
+      "godtlevert",
+      [
+        [2, [690, 860, 1020, 1190]],
+        [3, [820, 1010, 1180, 1330]],
+        [4, [910, 1090, 1270, 1410]],
+        [5, [1030, 1310, 1510, 1680]],
+        [6, [1110, 1370, 1560, 1750]],
+      ],
+      // 3, 5 and 6 portions were first checked 2026-10-08.
+      [{ checkedAt: "2026-09-28", people: [2, 4] }],
+    ),
     offer: null,
     strengths: [
       "Dokumenterte porsjonsvalg fra 2 til 6.",
@@ -349,10 +372,14 @@ const catalog: Provider<ProviderSlug>[] = [
       ),
       reviewAfterDays: 30,
     },
-    quotes: quotes("hellofresh", [
-      [2, [660, 770, 960, 1150]],
-      [4, [890, 1060, 1270, 1440]],
-    ]),
+    quotes: quotes(
+      "hellofresh",
+      [
+        [2, [660, 770, 960, 1150]],
+        [4, [890, 1060, 1270, 1440]],
+      ],
+      [{ checkedAt: "2026-09-28", people: [2, 4] }],
+    ),
     offer: null,
     strengths: [
       "Lavere standardpris i flere av de kontrollerte pakkestørrelsene.",
