@@ -12,6 +12,8 @@ import { EditorialProviderPage } from "@/components/editorial-provider-page";
 import { MarketOverview } from "@/components/market-overview";
 import { BestByNeed } from "@/components/best-by-need";
 import { CheapestGuide } from "@/components/cheapest-guide";
+import { DeliveryOverview } from "@/components/delivery-overview";
+import { places } from "@/lib/delivery";
 import { OfferBox } from "@/components/offer";
 import { ConsentSettings } from "@/components/analytics";
 import {
@@ -58,6 +60,11 @@ const corePages: Record<string, PageInfo> = {
     description:
       "Se laveste ukepris, laveste pris per porsjon og pris for to til seks porsjoner hos HelloFresh, Godtlevert og Kokkeløren. Ordinær pris, uten introtilbud.",
     eyebrow: "ORDINÆR PRIS, UTEN KAMPANJE",
+  },
+  levering: {
+    title: `Hvor leverer matkassene? ${places.length} postnumre sjekket`,
+    description: `Se om Godtlevert, HelloFresh og Kokkeløren leverte til ${places.length} postnumre fra Kristiansand til Kirkenes, med leveringsdager der leverandøren viser dem.`,
+    eyebrow: "LEVERING",
   },
   "hellofresh-vs-godtlevert": {
     title: "HelloFresh eller Godtlevert?",
@@ -165,6 +172,13 @@ export default async function Page({
       <>
         <PageSchema path={`/${slug}`} title={p.title} />
         <ProviderPage provider={provider} />
+      </>
+    );
+  if (slug === "levering")
+    return (
+      <>
+        <PageSchema path="/levering" title={p.title} />
+        <DeliveryOverview />
       </>
     );
   if (slug === "billigste-matkasse")

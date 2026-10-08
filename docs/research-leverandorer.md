@@ -188,3 +188,32 @@ Et prisverktøy krever minst tre råvarekasser som kan sammenlignes på flere re
 ### Prishistorikk
 
 Hvert pristilbud i `lib/data.ts` har et valgfritt felt `history` med tidligere kontroller (dato, kassepris, frakt). Ved kontrollen 08.10.2026 var prisene for 2 og 4 porsjoner hos HelloFresh og Godtlevert identiske med 28.09.2026, og den kontrollen er registrert som historikk. Godtlevert 3, 5 og 6 porsjoner og Kokkeløren har bare én kontroll. Ved neste kontroll: flytt gjeldende pris til `history` før den oppdateres hvis prisen er endret, eller legg til datoen i `history` hvis den er uendret.
+
+## Leveringsprøve, kontrollert 08.10.2026
+
+Grunnlaget for [/levering](https://middagskasser.no/levering). Data: `lib/delivery.ts`. Visning og ferskhet: `lib/coverage.ts`.
+
+**Metode:**
+- 23 postnumre × 3 leverandører ble sjekket i leverandørenes offentlige leveringssjekker.
+- Bare postnummer ble skrevet inn: ingen konto, adresse eller andre personopplysninger.
+- Ingen nettverksdata, API-er eller automatisering ble brukt.
+
+| Leverandør | Sjekk | Viser | Frakt |
+| --- | --- | --- | --- |
+| HelloFresh | [planvalget](https://www.hellofresh.no/plans), første trinn | Ja/nei. Dager og tidsvinduer først etter konto. Stedslisten på `/about/delivery-areas` er utdatert (mangler blant annet Tromsø, Bodø og Molde) og brukes ikke. | 79 kr i plansammendraget for 11 av postnumrene der de leverer. Tillegg for enkelte leveringstidspunkter varierer fra uke til uke. |
+| Godtlevert | [hvor leverer Godtlevert](https://www.godtlevert.no/hvor-leverer-godtlevert) | Ukedag og tidsvindu per postnummer. Noen postnumre gir bare beskjed om å skrive inn full adresse; det registreres som «avhenger av adressen». | Vises ikke. Oppgitt standardfrakt er 79 kr ([avgifter](https://tips.godtlevert.no/nb/articles/16068043-avgifter-og-prisjusteringer)). |
+| Kokkeløren | [sjekk levering](https://kokkeloren.no/sjekk-levering) og [bestillingen](https://kokkeloren.no/kasse/abonnement/matkasse) | Ukedag og tidsvindu. Bestillingen viser i tillegg konkrete datoer, men de lagres ikke. | «Hjemlevering (+79 kr)» var eneste valg for alle postnumre der de leverer. Hentepunktene som nevnes på forsiden, er ikke synlige i bestillingen. |
+
+Resultat 08.10.2026:
+- HelloFresh leverte til 16 av 23 postnumre.
+- Godtlevert leverte til 19 av 23. 3 postnumre ba om full adresse (Førde, Mosjøen, Røros), og Kirkenes fikk nei.
+- Kokkeløren leverte til 19 av 23.
+- Svarene var ulike i Alta, Førde, Mo i Rana, Mosjøen, Oppdal og Røros. Ingen av de tre leverte til postnummer 9900 Kirkenes.
+
+### Vedlikeholdsrutine
+
+- **Hvert kvartal:** alle 23 postnumre hos alle tre leverandørene, 69 oppslag. Én komplett runde med dagens metode tar anslagsvis 75–90 minutter. Oppdater status, dager og vinduer og `checkedAt` i `lib/delivery.ts`.
+- **Hver måned, sammen med priskontrollen:** fraktprøver. Minst 0150, 5003 og 7010 hos HelloFresh og Kokkeløren, i tillegg til Godtleverts oppgitte standardfrakt. Frakt følger prisenes 30-dagersregel og skjules på siden når den er eldre.
+- **Ved kjent endring** (nyhet, leverandørmelding eller tilbakemelding fra leser): ekstra kontroll av de berørte postnumrene.
+- Svar som er eldre enn 120 dager, vises som «Må kontrolleres på nytt» med lenke til leverandørens sjekk. `missingChecks()` viser hvilke kombinasjoner av sted og leverandør som mangler data.
+- Lagre ikke konkrete datoer, tillegg for leveringstidspunkt eller hentepunkter uten offentlig liste. Skriv aldri at en leverandør leverer «i kommunen». Svaret gjelder bare postnummeret.

@@ -14,13 +14,13 @@ import {
   readOptional,
   numberWord,
   listJoin,
-  deliverySampleText,
   freshDeliverySamples,
   editorialProviders,
   priceTally,
   type Provider,
 } from "@/lib/data";
 import { destination } from "@/lib/commercial";
+import { coverageSentence } from "@/lib/coverage";
 import { AffiliateDisclosure } from "./affiliate-disclosure";
 export function ProviderPage({ provider: p }: { provider: Provider }) {
   const sizes = readFact(p.people),
@@ -68,7 +68,7 @@ export function ProviderPage({ provider: p }: { provider: Provider }) {
   const example = getQuote(p, 4, 3);
   const prices = fresh.map((q) => q.boxPrice);
   const fee = fresh.find((q) => q.deliveryFee !== null);
-  const sampleText = deliverySampleText(p);
+  const coverage = coverageSentence(p);
   const surcharge = readOptional(p.surcharge);
   return (
     <div className="container page-content">
@@ -190,10 +190,15 @@ export function ProviderPage({ provider: p }: { provider: Provider }) {
           </p>
           <h2>Hvor og når {p.name} leverer</h2>
           <p>
-            {readOptional(p.coverage)} {readOptional(p.deliveryWindows)}{" "}
-            {sampleText} Om dere får levert, ser dere når dere skriver inn
-            postnummeret hos {p.name}.
+            {readOptional(p.coverage)} {readOptional(p.deliveryWindows)} Om dere
+            får levert, ser dere når dere skriver inn postnummeret hos {p.name}.
           </p>
+          {coverage && (
+            <p>
+              {coverage}{" "}
+              <Link href="/levering">Se svarene for hvert postnummer</Link>.
+            </p>
+          )}
           <h2>Pause, endring og avslutning</h2>
           <p>
             {readFact(p.flexibility) || "Vilkårene må kontrolleres igjen."}{" "}

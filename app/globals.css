@@ -2126,3 +2126,140 @@ svg {
     gap: 8px;
   }
 }
+/* /levering */
+.dl-section {
+  margin: 10px 0 20px;
+}
+.dl-section > h2 {
+  font-size: 31px;
+  margin-bottom: 10px;
+}
+.dl-legend {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  max-width: 780px;
+}
+.dl-region h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 400;
+  margin: 28px 0 8px;
+}
+.dl-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 15px;
+}
+.dl-table th,
+.dl-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 11px 14px 11px 0;
+  border-top: 1px solid var(--line);
+}
+.dl-table thead th {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+  border-top: 0;
+  border-bottom: 1px solid var(--ink);
+}
+.dl-table thead a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.dl-table tbody th {
+  font-weight: 600;
+}
+.dl-table small {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.dl-table small a {
+  text-decoration: underline;
+}
+.dl-provider {
+  display: none;
+}
+.dl-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+}
+.dl-mark {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  flex-shrink: 0;
+}
+.dl-delivers .dl-mark {
+  background: var(--ink);
+}
+.dl-address-required .dl-mark {
+  background: linear-gradient(90deg, var(--ink) 50%, var(--white) 50%);
+}
+.dl-no-delivery,
+.dl-stale,
+.dl-missing,
+.dl-not-public {
+  color: var(--muted);
+  font-weight: 400;
+}
+.dl-no-delivery .dl-mark {
+  border-radius: 0;
+  border: 0;
+  border-top: 2px solid #9aa596;
+  height: 0;
+}
+.dl-stale .dl-mark,
+.dl-missing .dl-mark,
+.dl-not-public .dl-mark {
+  border-style: dotted;
+  border-color: #9aa596;
+}
+@media (max-width: 760px) {
+  .dl-section > h2 {
+    font-size: 27px;
+  }
+  .dl-table,
+  .dl-table tbody,
+  .dl-table tr,
+  .dl-table th,
+  .dl-table td {
+    display: block;
+    width: 100%;
+  }
+  .dl-table thead {
+    display: none;
+  }
+  .dl-table tr {
+    border-top: 1px solid var(--ink);
+    padding: 6px 0 8px;
+  }
+  .dl-table tbody th {
+    border-top: 0;
+    padding: 8px 0 4px;
+    font-size: 17px;
+  }
+  .dl-table td {
+    display: grid;
+    grid-template-columns: 6.8em 1fr;
+    column-gap: 10px;
+    border-top: 0;
+    padding: 5px 0;
+  }
+  .dl-provider {
+    display: block;
+    color: var(--muted);
+    font-size: 14px;
+  }
+}

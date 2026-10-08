@@ -8,7 +8,6 @@ import {
   getQuote,
   activeOffer,
   isFresh,
-  deliverySampleText,
   type Offer,
 } from "../lib/data.ts";
 import { matchProviders, resultTitle, type Answers } from "../lib/selector.ts";
@@ -47,13 +46,88 @@ test("prices disappear everywhere when the check is older than 30 days", () => {
   const m = matchProviders(providers, answers(), expired);
   assert.ok(m.every((x) => x.priceQuote === null && x.score === 0));
 });
-test("delivery sample text states only what was seen and expires with prices", () => {
-  const hf = getProvider("hellofresh")!,
-    gl = getProvider("godtlevert")!;
-  assert.match(deliverySampleText(hf, now)!, /79 kr for alle tre/);
-  assert.match(deliverySampleText(gl, now)!, /ikke frakt/);
-  assert.doesNotMatch(deliverySampleText(gl, now)!, /d+ kr/);
-  assert.equal(deliverySampleText(hf, new Date("2026-11-08T12:00:00Z")), null);
+test("delivery checks: complete sample, fixed statuses and no false yes", async () => {
+  const { places, deliveryChecks, missingChecks } =
+    await import("../lib/delivery.ts");
+  const { cellView, providerCoverage, findCheck, coverageSentence } =
+    await import("../lib/coverage.ts");
+  const ids = ["godtlevert", "hellofresh", "kokkeloren"] as const;
+  assert.equal(places.length, 23);
+  assert.equal(new Set(places.map((p) => p.postcode)).size, 23);
+  assert.deepEqual(missingChecks([...ids]), []);
+  assert.equal(deliveryChecks.length, 69);
+  const all = [...providers, ...editorialProviders];
+  const cov = (id: string) =>
+    providerCoverage(
+      all.find((p) => p.id === id)!,
+      now,
+    );
+  assert.deepEqual(
+    [cov("hellofresh").delivers, cov("hellofresh").noDelivery],
+    [16, 7],
+  );
+  assert.deepEqual(
+    [
+      cov("godtlevert").delivers,
+      cov("godtlevert").addressRequired,
+      cov("godtlevert").noDelivery,
+    ],
+    [19, 3, 1],
+  );
+  assert.deepEqual(
+    [cov("kokkeloren").delivers, cov("kokkeloren").noDelivery],
+    [19, 4],
+  );
+  // Mosjøen: three different answers, and the address case is never "yes".
+  assert.equal(
+    cellView(findCheck("hellofresh", "8657"), now).kind,
+    "no-delivery",
+  );
+  assert.equal(
+    cellView(findCheck("godtlevert", "8657"), now).kind,
+    "address-required",
+  );
+  const k = cellView(findCheck("kokkeloren", "8657"), now);
+  assert.equal(k.kind, "delivers");
+  assert.equal(k.days, "man 16–22");
+  // HelloFresh shows no days without an account.
+  assert.equal(cellView(findCheck("hellofresh", "0150"), now).days, null);
+  // Unknown places are reported as not checked, never inferred.
+  assert.equal(cellView(findCheck("hellofresh", "9999"), now).kind, "missing");
+  // The provider page sentence is about the sample, not the country.
+  const s = coverageSentence(
+    all.find((p) => p.id === "godtlevert")!,
+    now,
+  )!;
+  assert.match(s, /^Vi sjekket 23 postnumre/);
+  assert.match(s, /full adresse/);
+  assert.doesNotMatch(s, /i Norge|hele landet/);
+});
+test("delivery checks expire after 120 days and fees after 30", async () => {
+  const { deliveryChecks } = await import("../lib/delivery.ts");
+  const { cellView, feeFresh, providerCoverage, coverageSentence } =
+    await import("../lib/coverage.ts");
+  const kok = deliveryChecks.find(
+    (c) => c.provider === "kokkeloren" && c.postcode === "0150",
+  )!;
+  // 2026-10-08 + 120 days = 2027-02-05.
+  assert.equal(
+    cellView(kok, new Date("2027-02-04T12:00:00Z")).kind,
+    "delivers",
+  );
+  assert.equal(cellView(kok, new Date("2027-02-06T12:00:00Z")).kind, "stale");
+  assert.equal(feeFresh(kok, new Date("2026-11-06T12:00:00Z")), true);
+  assert.equal(feeFresh(kok, new Date("2026-11-08T12:00:00Z")), false);
+  const later = new Date("2027-02-06T12:00:00Z");
+  const hf = providers.find((p) => p.id === "hellofresh")!;
+  assert.equal(providerCoverage(hf, later).checked, 0);
+  assert.equal(coverageSentence(hf, later), null);
+  // Godtlevert's fee is a stated standard, never an observed address fee.
+  assert.ok(
+    deliveryChecks
+      .filter((c) => c.provider === "godtlevert" && c.fee !== null)
+      .every((c) => c.feeBasis === "stated-standard"),
+  );
 });
 test("delivery samples are tied to a postcode and never stand in for a fee", () => {
   for (const p of [...providers, ...editorialProviders]) {

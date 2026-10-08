@@ -40,6 +40,7 @@ export const paths = [
   "/matkasser",
   "/beste-matkasse",
   "/billigste-matkasse",
+  "/levering",
 ];
 export function measuredPath(path: string) {
   return paths.includes(path) ? path : "/404";

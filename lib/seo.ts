@@ -14,6 +14,7 @@ export const indexablePaths = [
   "/matkasser",
   "/beste-matkasse",
   "/billigste-matkasse",
+  "/levering",
   // Editorial provider pages are ordinary indexable provider pages.
   ...editorialProviders.map((e) => "/" + e.id),
 ];

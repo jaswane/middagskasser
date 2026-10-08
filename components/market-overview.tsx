@@ -21,6 +21,7 @@ import {
   kitTypeLabels,
   type MarketEntry,
 } from "@/lib/market";
+import { places } from "@/lib/delivery";
 // Portions and dinners for providers with a profile come from the provider
 // data, so they follow the same freshness rules as the rest of the site.
 function profileFacts(e: MarketEntry) {
@@ -328,6 +329,11 @@ export function MarketOverview() {
           Hvilken av de tre råvarekassene som peker seg ut for pris, størrelse
           eller menyvalg, har vi samlet på{" "}
           <Link href="/beste-matkasse">Beste matkasse for ulike behov</Link>.
+        </p>
+        <p>
+          Vi har også sjekket om de tre råvarekassene leverte til{" "}
+          {places.length} postnumre rundt om i landet:{" "}
+          <Link href="/levering">Hvor leverer matkassene?</Link>
         </p>
       </div>
     </div>

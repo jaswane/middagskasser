@@ -18,6 +18,7 @@ const indexable = [
   "/matkasser",
   "/beste-matkasse",
   "/billigste-matkasse",
+  "/levering",
 ];
 const routes = [...indexable, ...noindexRoutes];
 const internal = new Set();

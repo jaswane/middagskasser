@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PageIntro } from "./chrome";
 import { DirectOutbound } from "./outbound";
+import { coverageSentence } from "@/lib/coverage";
 import {
   providers,
   readFact,
@@ -11,7 +12,6 @@ import {
   formatPrice,
   formatServing,
   providerSources,
-  deliverySampleText,
   type EditorialProfile,
   type EditorialProviderId,
   type Provider,
@@ -104,10 +104,15 @@ export function EditorialProviderPage({
           </p>
           <h2>Hvor og når {p.name} leverer</h2>
           <p>
-            {readOptional(p.coverage)} {readOptional(p.deliveryWindows)}{" "}
-            {deliverySampleText(p)} Om dere får levert, ser dere når dere
-            skriver inn postnummeret hos {p.name}.
+            {readOptional(p.coverage)} {readOptional(p.deliveryWindows)} Om dere
+            får levert, ser dere når dere skriver inn postnummeret hos {p.name}.
           </p>
+          {coverageSentence(p) && (
+            <p>
+              {coverageSentence(p)}{" "}
+              <Link href="/levering">Se svarene for hvert postnummer</Link>.
+            </p>
+          )}
           <h2>Pause og avbestilling</h2>
           <p>{readFact(p.flexibility)}</p>
           <h2>Hvem passer {p.name} for?</h2>

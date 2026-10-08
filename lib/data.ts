@@ -1,3 +1,4 @@
+import { deliveryChecks, places } from "./delivery.ts";
 // Core providers: main comparison, selector and the central /go/ flow.
 export type ProviderId = "godtlevert" | "hellofresh";
 // Editorial providers: own page and shown as an alternative, with a plain
@@ -126,22 +127,33 @@ const gf = source(
   "Godtlevert – oppgitt standardfrakt",
   priceDate,
 );
-const gd = source(
-  "https://www.godtlevert.no/hvor-leverer-godtlevert",
-  "Godtlevert – hvor leverer Godtlevert",
-  priceDate,
-);
 const hfaq = source(
   "https://www.hellofresh.no/about/faq",
   "HelloFresh – ofte stilte spørsmål",
   priceDate,
 );
 // Delivery fee seen for the same three postcodes at every provider.
-const samplePlaces = [
-  ["0150", "Oslo"],
-  ["5003", "Bergen"],
-  ["7010", "Trondheim"],
-] as const;
+// Postcodes used as delivery-fee samples on the price pages. The data comes
+// from the delivery checks in lib/delivery.ts.
+const feeSamplePostcodes = ["0150", "5003", "7010"];
+function samplesFrom(id: ProviderSlug): DeliverySample[] {
+  return feeSamplePostcodes.flatMap((postcode) => {
+    const c = deliveryChecks.find(
+      (x) => x.provider === id && x.postcode === postcode,
+    );
+    const place = places.find((x) => x.postcode === postcode)?.place;
+    if (!c || !place) return [];
+    return [
+      {
+        postcode,
+        place,
+        fee: c.feeBasis === "observed" ? c.fee : null,
+        available: c.status === "delivers",
+        source: c.source,
+      },
+    ];
+  });
+}
 const gt = source("https://www.godtlevert.no/vilkar", "Godtlevert – vilkår");
 const ht = source(
   "https://www.hellofresh.no/about/termsandconditions",
@@ -266,14 +278,7 @@ const catalog: Provider<ProviderSlug>[] = [
     ),
     // Godtlevert shows delivery days for a postcode, but not the fee for an
     // address before an account is created. 79 kr is their stated standard.
-    deliverySamples: samplePlaces.map(([postcode, place]) => ({
-      postcode,
-      place,
-      fee: null,
-      available: true,
-      source: gd,
-      note: "Leveringssjekken viser dager og tidsvinduer, men ikke frakt. Frakten for adressen vises først når dere har laget konto.",
-    })),
+    deliverySamples: samplesFrom("godtlevert"),
     surcharge: {
       ...fact(
         "Enkelte retter med dyrere råvarer har pluspris, som kommer i tillegg til prisen på kassen. Beløpet står ved retten.",
@@ -353,18 +358,7 @@ const catalog: Provider<ProviderSlug>[] = [
         "2026-10-08",
       ),
     ),
-    deliverySamples: samplePlaces.map(([postcode, place]) => ({
-      postcode,
-      place,
-      fee: 79,
-      available: true,
-      source: source(
-        "https://www.hellofresh.no/plans",
-        `HelloFresh – planvalg, postnummer ${postcode}`,
-        priceDate,
-      ),
-      note: "Det gjaldt alle kassestørrelser, men enkelte leveringstidspunkter koster ekstra.",
-    })),
+    deliverySamples: samplesFrom("hellofresh"),
     surcharge: {
       ...fact(
         "Enkelte spesialretter, for eksempel med premiumingredienser eller større porsjoner, koster mer per porsjon og belastes i tillegg til kasseprisen. Noen leveringstidspunkter koster også ekstra, og tillegget endrer seg fra uke til uke.",
@@ -435,18 +429,7 @@ const catalog: Provider<ProviderSlug>[] = [
       "Levering skjer fredag til tirsdag, avhengig av hvor dere bor. For postnummer 0150 kunne vi velge alle fem dagene, i tidsvinduer mellom kl. 09 og 22.",
       kp,
     ),
-    deliverySamples: samplePlaces.map(([postcode, place]) => ({
-      postcode,
-      place,
-      fee: 79,
-      available: true,
-      source: source(
-        "https://kokkeloren.no/kasse/abonnement/matkasse",
-        `Kokkeløren – bestilling, postnummer ${postcode}`,
-        kokkelorenDate,
-      ),
-      note: "Det gjaldt alle kassestørrelser, og hjemlevering var eneste leveringsvalg.",
-    })),
+    deliverySamples: samplesFrom("kokkeloren"),
     // Observed in the order picker for postcode 0150 on 2026-10-08. Only the
     // sizes that match 2 or 4 portions are recorded; three dinners is fixed.
     // The box for two adults and two small children (1 249 kr) is left out
@@ -623,23 +606,6 @@ export function freshDeliverySamples(
   return (p.deliverySamples ?? []).filter((s) =>
     isFresh(s.source.checkedAt, 30, now),
   );
-}
-// One sentence about the sampled postcodes, or null without fresh samples.
-export function deliverySampleText(
-  p: Provider<ProviderSlug>,
-  now = new Date(),
-): string | null {
-  const s = freshDeliverySamples(p, now);
-  if (!s.length || s.some((x) => !x.available)) return null;
-  const where = listJoin(s.map((x) => `${x.postcode} (${x.place})`));
-  const fees = [...new Set(s.map((x) => x.fee))];
-  const fee =
-    fees.length === 1 && fees[0] !== null
-      ? ` Frakten var ${fees[0]} kr for alle ${numberWord(s.length)}.`
-      : fees.every((f) => f !== null)
-        ? ` Frakten var ${listJoin(s.map((x) => `${x.fee} kr for ${x.postcode}`))}.`
-        : "";
-  return `Ved kontroll ${formatDate(s[0].source.checkedAt)} kunne ${p.name} levere til postnummer ${where}.${fee} ${s[0].note ?? ""}`.trim();
 }
 export function providerSources(p: Provider<ProviderSlug>): Source[] {
   const all = [
