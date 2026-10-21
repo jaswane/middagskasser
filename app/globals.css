@@ -406,15 +406,17 @@ svg {
   line-height: 1.4;
 }
 .provider-mark {
-  width: 31px;
-  height: 34px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font:
-    italic 26px Georgia,
-    serif;
-  border-radius: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--muted);
+}
+.mark-godtlevert {
+  background: #9f4024;
+}
+.mark-hellofresh {
+  background: #456323;
 }
 .gt {
   background: #f6e5da;
@@ -902,6 +904,16 @@ svg {
   align-items: center;
   gap: 18px;
 }
+/* While the consent banner is open, keep keyboard focus clear of it
+   (WCAG 2.4.11): scrolling to a focused element stops above the banner. */
+html:has(.consent) {
+  scroll-padding-bottom: 160px;
+}
+@media (max-width: 760px) {
+  html:has(.consent) {
+    scroll-padding-bottom: 290px;
+  }
+}
 .consent p {
   font-size: 13px;
 }
@@ -1294,11 +1306,6 @@ svg {
   .provider-name {
     font-size: 18px;
     gap: 7px;
-  }
-  .provider-mark {
-    width: 26px;
-    height: 30px;
-    font-size: 22px;
   }
   .hf {
     font-size: 19px;

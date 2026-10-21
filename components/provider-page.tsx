@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { PageIntro } from "./chrome";
 import { Outbound } from "./outbound";
@@ -76,14 +75,6 @@ export function ProviderPage({ provider: p }: { provider: Provider }) {
         eyebrow="LEVERANDØREN KORT FORTALT"
         title={`${p.name}: passer det for dere?`}
       >
-        <Image
-          src={`/brands/${isG ? "godtlevert-logo.svg" : "hellofresh-logo.png"}`}
-          alt={`${p.name} logo`}
-          width={129}
-          height={48}
-          style={{ objectFit: "contain", objectPosition: "left" }}
-          unoptimized
-        />
         <p>{p.description}</p>
       </PageIntro>
       <AffiliateDisclosure flags={{ [p.id]: destination(p.id).affiliate }} />

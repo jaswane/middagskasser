@@ -351,3 +351,21 @@ test("all 72 selector combinations are deterministic and never assign two winner
           assert.ok(matches.every((m) => m.score === 0));
       }
 });
+test("no provider logos are used without a documented right of use", () => {
+  // docs/rights/provider-assets.md: logos removed 2026-10-21 until a right
+  // of use is documented. Provider names are shown as text.
+  const files = [
+    "../components/comparison.tsx",
+    "../components/provider-page.tsx",
+    "../components/editorial-provider-page.tsx",
+    "../components/selector.tsx",
+    "../app/[slug]/page.tsx",
+    "../app/page.tsx",
+  ];
+  for (const f of files)
+    assert.doesNotMatch(
+      readFileSync(new URL(f, import.meta.url), "utf8"),
+      /\/brands\//,
+      f,
+    );
+});

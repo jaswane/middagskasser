@@ -114,12 +114,18 @@ for (const asset of [
   "favicon-32.png",
   "apple-touch-icon.png",
   "og.png",
+])
+  assert.equal((await fetch(base + "/" + asset)).status, 200, asset);
+// Provider logos are not used until a right of use is documented
+// (docs/rights/provider-assets.md); the files must stay removed.
+for (const asset of [
   "brands/hellofresh.ico",
   "brands/hellofresh-logo.png",
   "brands/godtlevert-icon.svg",
   "brands/godtlevert-logo.svg",
+  "brands/godtlevert.ico",
 ])
-  assert.equal((await fetch(base + "/" + asset)).status, 200, asset);
+  assert.equal((await fetch(base + "/" + asset)).status, 404, asset);
 assert.equal((await fetch(base + "/finnes-ikke")).status, 404);
 // Inherited object property names must not resolve to a [slug] page.
 for (const slug of [

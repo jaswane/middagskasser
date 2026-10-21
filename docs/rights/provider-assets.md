@@ -1,6 +1,8 @@
 # Leverandørenes logoer og merkevarefiler
 
-Register over merkevarefiler fra matkasseleverandører: hvor de kommer fra, hvilket grunnlag vi har for å bruke dem, og hvor de brukes. Kontrollert 08.10.2026.
+Register over merkevarefiler fra matkasseleverandører: hvor de kommer fra, hvilket grunnlag vi har for å bruke dem, og hvor de brukes. Sist kontrollert 21.10.2026.
+
+**Status 21.10.2026: Ingen leverandørlogoer brukes.** Rettighetsgrunnlaget var fortsatt ikke dokumentert, så logoene og ikonene for HelloFresh og Godtlevert ble fjernet. Filene er slettet fra `public/brands/`. Leverandørnavnene vises som tekst, med en dekorativ fargeprikk ved navnet i sammenligningen og velgeren.
 
 Regel: Vi bruker ikke en leverandørs logo eller ikon uten et dokumentert rettighetsgrunnlag. Mangler grunnlaget, bruker vi leverandørens navn som tekst. Vi lenker aldri direkte til leverandørens filer (ingen hotlinking); en godkjent fil lagres i `public/brands/` med kilde og kontrolldato her.
 
@@ -10,26 +12,26 @@ At en fil er lastet ned fra leverandørens egen side eller presserom, dokumenter
 
 | Leverandør | Logo tilgjengelig | Kilde | Rettighetsgrunnlag | Lokal fil | Brukes i dag | Tillatt bruk | Usikkerhet |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| HelloFresh | Ja | [Logo på hellofresh.no](https://media.hellofresh.com/w_256,q_100,f_auto,c_limit,fl_lossy/hellofresh_website/logo/Hello_Fresh_Lockup.png) og [favicon](https://www.hellofresh.com/favicons/hellofresh.ico), hentet 28.09.2026. HelloFresh Group tilbyr også merkevarefiler i [presserommet](https://hellofreshgroup.com/en/newsroom/press-material) («Download our brand and media assets»). | **Ikke dokumentert.** Presserommet oppgir ingen bruksvilkår (kontrollert 08.10.2026). Ingen skriftlig tillatelse eller affiliatevilkår om logobruk i prosjektet. | `public/brands/hellofresh-logo.png`, `public/brands/hellofresh.ico` | Ja: logo på `/hellofresh`, ikon ved navnet i sammenligningen og velgerresultatet | Uavklart | Høy. Presserommet er rettet mot presse, ikke kommersielle sammenligningssider. |
-| Godtlevert | Ja | [Logo](https://ggfrontendassets.azureedge.net/publicassets/godtlevert/godtlevert-logo-v2.svg), [ikon](https://www.godtlevert.no/icon.svg) og [favicon](https://www.godtlevert.no/favicon.ico), hentet 28.09.2026. Logo også i Godtleverts [Cision-nyhetsrom](https://news.cision.com/no/godtlevert/i/godtlevert-logo,m29792). | **Ikke dokumentert.** Cision-siden viser bare nedlastingsstørrelser, ingen lisens eller bruksvilkår (kontrollert 08.10.2026). Godtleverts presseside `/side/presse` svarte 404. | `public/brands/godtlevert-logo.svg`, `public/brands/godtlevert-icon.svg`, `public/brands/godtlevert.ico` | Ja: logo på `/godtlevert`, ikon ved navnet i sammenligningen og velgerresultatet | Uavklart | Høy. Som for HelloFresh. |
+| HelloFresh | Ja | [Logo på hellofresh.no](https://media.hellofresh.com/w_256,q_100,f_auto,c_limit,fl_lossy/hellofresh_website/logo/Hello_Fresh_Lockup.png) og [favicon](https://www.hellofresh.com/favicons/hellofresh.ico), hentet 28.09.2026. HelloFresh Group tilbyr også merkevarefiler i [presserommet](https://hellofreshgroup.com/en/newsroom/press-material) («Download our brand and media assets»). | **Ikke dokumentert.** Presserommet oppgir ingen bruksvilkår (kontrollert 08.10.2026). Ingen skriftlig tillatelse eller affiliatevilkår om logobruk i prosjektet. | Slettet 21.10.2026 (var `public/brands/hellofresh-logo.png`, `hellofresh.ico`) | Nei. Fjernet 21.10.2026. | Bare tekstnavn til grunnlaget er dokumentert | Høy. Presserommet er rettet mot presse, ikke kommersielle sammenligningssider. |
+| Godtlevert | Ja | [Logo](https://ggfrontendassets.azureedge.net/publicassets/godtlevert/godtlevert-logo-v2.svg), [ikon](https://www.godtlevert.no/icon.svg) og [favicon](https://www.godtlevert.no/favicon.ico), hentet 28.09.2026. Logo også i Godtleverts [Cision-nyhetsrom](https://news.cision.com/no/godtlevert/i/godtlevert-logo,m29792). | **Ikke dokumentert.** Cision-siden viser bare nedlastingsstørrelser, ingen lisens eller bruksvilkår (kontrollert 08.10.2026). Godtleverts presseside `/side/presse` svarte 404. | Slettet 21.10.2026 (var `public/brands/godtlevert-logo.svg`, `godtlevert-icon.svg`, `godtlevert.ico`) | Nei. Fjernet 21.10.2026. | Bare tekstnavn til grunnlaget er dokumentert | Høy. Som for HelloFresh. |
 | Kokkeløren | Ikke hentet | – | Ingen | Ingen | Nei. Tekstnavn brukes overalt. | Bare tekstnavn | – |
 
-Opprinnelsen til HelloFresh- og Godtlevert-filene er også beskrevet i [kildekontrollen fra produksjonssprinten](../production-sprint/kildekontroll.md), med sjekksummer i [brand-hashes.json](../production-sprint/brand-hashes.json).
+Opprinnelsen til de tidligere HelloFresh- og Godtlevert-filene er beskrevet i [kildekontrollen fra produksjonssprinten](../production-sprint/kildekontroll.md). Sjekksummene i [brand-hashes.json](../production-sprint/brand-hashes.json) beholdes som historikk over filene som ble brukt fra 28.09. til 21.10.2026.
 
 ## Kontroll av partnervilkår, 08.10.2026
 
 Adtractions offentlige [partneravtale](https://adtraction.com/partner-agreement/) (ingen versjonsdato, «Adtraction 2026» i bunnteksten) gir ingen rett til annonsørenes logoer eller varemerker. Den handler bare om Adtractions egen tjeneste («The Partner does not, through this Partner Agreement, acquire any copyright or license associated with the Service»). Ansvaret for innholdet ligger hos partneren: «The Partner bears responsibility for ensuring that the rights to all content on the Partner channel». Annonsørspesifikke vilkår finnes bare i Adtractions system, bak innlogging.
 
-Konklusjon: Ingen offentlig kilde gir oss rett til å bruke HelloFresh- eller Godtlevert-logoen. Det kan finnes et grunnlag i programvilkårene for HelloFresh og Godtlevert inne i eiers Adtraction-konto. Det må eier kontrollere: åpne programmet, se etter «annonsemateriell», «logo» eller «varemerke», og noter vilkår og dato her. Logoene er ikke fjernet i denne runden, fordi dette ikke er avklart.
+Konklusjon: Ingen offentlig kilde gir oss rett til å bruke HelloFresh- eller Godtlevert-logoen. Det kan finnes et grunnlag i programvilkårene for HelloFresh og Godtlevert inne i eiers Adtraction-konto. Det må eier kontrollere: åpne programmet, se etter «annonsemateriell», «logo» eller «varemerke», og noter vilkår og dato her. Logoene ble ikke fjernet i den runden, fordi dette ikke var avklart. De ble fjernet 21.10.2026, se under.
 
-## Åpen beslutning
+## Beslutning 21.10.2026
 
-HelloFresh- og Godtlevert-logoene er i bruk uten dokumentert rettighetsgrunnlag. Det bryter regelen over. To måter å lukke dette på:
+Logoene var i bruk uten dokumentert rettighetsgrunnlag, i strid med regelen over. Reserveløsningen nedenfor (alternativ 2) er gjennomført. En test i `tests/production.test.ts` stopper nye referanser til `/brands/`, og røyktesten krever at de gamle filene gir 404. Skal logoene tilbake, må alternativ 1 være dokumentert først.
 
 1. **Skaffe grunnlaget:** skriftlig bekreftelse fra leverandøren (presse- eller partnerkontakt) eller vilkår i affiliateprogrammet hos Adtraction som tillater logobruk. Legg inn vilkår, dato og omfang i tabellen.
 2. **Bytte til tekst:** fjerne logoen på leverandørsidene og ikonene ved navnene. Navnet står allerede som tekst begge steder, så sammenligningen fungerer uten dem.
 
-Eier må velge. Til det er avklart, tas ingen nye leverandørlogoer i bruk.
+Alternativ 2 ble valgt 21.10.2026, fordi alternativ 1 fortsatt ikke var dokumentert.
 
 ### Gjennomgang 08.10.2026, kveld
 

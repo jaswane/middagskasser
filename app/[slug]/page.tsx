@@ -505,7 +505,11 @@ function About() {
         </p>
         <h2>Åpent om det vi vet</h2>
         <p>
-          Vi sammenligner foreløpig to leverandører. Det er bedre med en liten
+          Hovedsammenligningen og matkassevelgeren dekker HelloFresh og
+          Godtlevert, som har flest kassestørrelser felles.{" "}
+          <Link href="/kokkeloren">Kokkeløren</Link> vurderer vi på egen side,
+          og <Link href="/matkasser">markedsoversikten</Link> viser flere
+          tjenester vi har kontrollert. Det er bedre med en avgrenset
           sammenligning med tydelig grunnlag enn en lang liste som lover mer enn
           den kan dokumentere.
         </p>

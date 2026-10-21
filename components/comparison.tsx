@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, Check, Plus, Minus, Info } from "lucide-react";
 import {
   providers,
@@ -15,18 +14,13 @@ import {
 import { Outbound } from "./outbound";
 import { track } from "./analytics";
 import { AffiliateDisclosure } from "./affiliate-disclosure";
+// Provider names are plain text. The dot is decoration only: we use no
+// provider logos until a right of use is documented
+// (docs/rights/provider-assets.md).
 export function ProviderName({ id, name }: { id: string; name: string }) {
   return (
     <span className={`provider-name ${id}`}>
-      <Image
-        className="provider-mark"
-        src={`/brands/${id === "hellofresh" ? "hellofresh.ico" : "godtlevert-icon.svg"}`}
-        width={31}
-        height={34}
-        alt=""
-        aria-hidden="true"
-        unoptimized
-      />
+      <span className={`provider-mark mark-${id}`} aria-hidden="true" />
       {name}
     </span>
   );
