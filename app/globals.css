@@ -591,6 +591,10 @@ svg {
   font-size: 14px;
   max-width: 400px;
 }
+.decision-points p a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .selector-teaser {
   display: flex;
   gap: 27px;

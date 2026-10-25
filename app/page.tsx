@@ -121,7 +121,11 @@ export default function Home() {
                 <h3>Hva koster en vanlig uke?</h3>
                 <p>
                   Se normalpris og frakt sammen. En førsteukerabatt sier lite om
-                  prisen i lengden.
+                  prisen i lengden.{" "}
+                  <Link href="/billigste-matkasse">
+                    Se hvilken matkasse som er billigst
+                  </Link>
+                  .
                 </p>
               </div>
             </article>
@@ -141,7 +145,8 @@ export default function Home() {
                 <h3>Passer det med hverdagen?</h3>
                 <p>
                   Sjekk levering på adressen deres og fristen for å endre eller
-                  hoppe over en uke.
+                  hoppe over en uke.{" "}
+                  <Link href="/levering">Se hvor matkassene leverer</Link>.
                 </p>
               </div>
             </article>

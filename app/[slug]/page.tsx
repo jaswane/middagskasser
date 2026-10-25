@@ -29,12 +29,18 @@ import {
 } from "@/lib/data";
 import { affiliateFlags } from "@/lib/commercial";
 export const dynamic = "force-dynamic";
-type PageInfo = { title: string; description: string; eyebrow: string };
+type PageInfo = {
+  title: string;
+  description: string;
+  eyebrow: string;
+  // Search result title when it should differ from the H1.
+  metaTitle?: string;
+};
 const corePages: Record<string, PageInfo> = {
   hellofresh: {
-    title: "HelloFresh: pris, utvalg og begrensninger",
+    title: "HelloFresh matkasse: pris, meny, levering og vilkår",
     description:
-      "Se kontrollerte priseksempler, porsjonsvalg og vilkår for HelloFresh. Sammenlign med Godtlevert før du velger.",
+      "Se kontrollerte priser for alle kassestørrelser, hva menyen gir dere, levering og vilkår hos HelloFresh. Sammenlign med Godtlevert før du velger.",
     eyebrow: "LEVERANDØR",
   },
   godtlevert: {
@@ -68,6 +74,7 @@ const corePages: Record<string, PageInfo> = {
   },
   "hellofresh-vs-godtlevert": {
     title: "HelloFresh eller Godtlevert?",
+    metaTitle: "HelloFresh vs Godtlevert: pris, utvalg og forskjeller",
     description:
       "Sammenlign like pakkestørrelser, normalpris med oppgitt frakt, utvalg og fleksibilitet. Se hva som skiller HelloFresh og Godtlevert.",
     eyebrow: "DIREKTE SAMMENLIGNING",
@@ -143,7 +150,7 @@ export async function generateMetadata({
       robots: { index: false, follow: false },
     };
   return {
-    ...pageMetadata(`/${slug}`, p.title, p.description),
+    ...pageMetadata(`/${slug}`, p.metaTitle ?? p.title, p.description),
     ...(slug === "designoversikt"
       ? { robots: { index: false, follow: false } }
       : {}),
@@ -218,7 +225,7 @@ export default async function Page({
       <PageIntro eyebrow={p.eyebrow} title={p.title}>
         <p>
           {slug === "hellofresh-vs-godtlevert"
-            ? "To matkasser med mye til felles. Størrelsen dere trenger, priseksemplet og ukens retter gir et bedre svar enn en generell vinner."
+            ? "Her sammenligner vi HelloFresh og Godtlevert på pris med frakt, utvalg, kassestørrelser og fleksibilitet. De to har mye til felles, så størrelsen dere trenger og ukens retter sier mer enn en generell vinner."
             : p.description}
         </p>
       </PageIntro>
