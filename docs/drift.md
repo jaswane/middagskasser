@@ -1,6 +1,6 @@
 # Drift, tilganger og gjenoppretting
 
-Kort driftsark for Middagskasser.no. Sist oppdatert 21.10.2026. Kontoinnstillingene nedenfor er eiers ansvar og er ikke lest av verktøy.
+Kort driftsark for Middagskasser.no. Sist oppdatert 29.10.2026. Kontoinnstillingene nedenfor er eiers ansvar og er ikke lest av verktøy.
 
 ## 1. Tilganger og tofaktor (manuell kontroll for eier)
 
@@ -29,19 +29,27 @@ Minste prøve, kjørt 21.10.2026:
 
 Gjenta prøven hvert halvår, og etter større oppgraderinger av Next.js eller Node.
 
-## 3. GA4: Enhanced Measurement må være av
+## 3. GA4: Enhanced Measurement er av
 
-Kontrollert 21.10.2026 i den offentlige gtag-konfigurasjonen for G-2QE2FCW5YH: **fortsatt på.** Utgående klikk, sidevisninger ved historikkendringer, rulling, skjema, video og nedlastinger er aktive.
+**Status 29.10.2026: GA4 WORKING — NO CODE CHANGE.** Målingen er ren, og GA-data fra og med 21.10.2026 kan brukes til å vurdere effekt.
 
-Slik slår eier det av: GA4 → Admin → Datastrømmer → velg strømmen for middagskasser.no → **Enhanced measurement** → slå av hele bryteren. Det holder ikke å slå av bare «Outbound clicks»; sidevisninger ved historikkendringer kan også gi doble sidevisninger. Lagre.
+Enhanced Measurement er slått av for datastrømmen til middagskasser.no (G-2QE2FCW5YH). Det ble bekreftet med en test i produksjon 29.10.2026, der vi leste de faktiske forespørslene fra nettleseren:
 
-Verifisering etterpå, med samtykke gitt i en testøkt:
-- én `page_view` per navigasjon
-- ingen automatiske `click`-, `scroll`-, `form_*`- eller `file_download`-hendelser
-- `provider_outbound` fyrer fortsatt ved klikk på en leverandørknapp
-- trekk samtykket tilbake etter testen
+- **Før samtykke:** ingen Google-skript, ingen informasjonskapsler og ingen forespørsler til Google.
+- **Etter samtykke:** én `page_view` per navigasjon.
+- **Egne hendelser:** `provider_view`, `provider_outbound` og hendelsene fra velgeren kommer fram.
+- **Automatiske hendelser:** ingen `scroll`, `click`, `form_*`, `file_download` eller `video_*`.
+- **Tilbaketrekking av samtykke:** GA-informasjonskapslene fjernes, og det går ingen nye forespørsler.
 
-Til dette er gjort, bør GA-data ikke brukes til å vurdere effekt.
+`vtp_enable*`-flaggene i den offentlige gtag.js står som `true` også når Enhanced Measurement er av. De er ikke bevis for noe. Bare hendelsene som faktisk sendes, viser hva som måles.
+
+**Ny kontroll:** Gi samtykke i en ny økt, naviger mellom noen sider, klikk på en leverandørknapp og les forespørslene til `google-analytics.com/g/collect`. Trekk samtykket tilbake etterpå. Slå ikke på Enhanced Measurement igjen: nettstedet sender sidevisningene selv, så sidevisninger ved historikkendringer kan gi doble `page_view`.
+
+### Historikk (lukket)
+
+- **08.10. og 21.10.2026:** Enhanced Measurement var på. Utgående klikk, sidevisninger ved historikkendringer, rulling, skjema, video og nedlastinger var aktive. GA-data fra før 21.10.2026 kan derfor inneholde automatiske hendelser og doble sidevisninger.
+- **21.10.2026:** Eier slo av hele bryteren i GA4 → Admin → Datastrømmer → Enhanced measurement. En test samme dag viste ren måling.
+- **29.10.2026:** Kontrollert på nytt i produksjon, se over. Avviket er lukket.
 
 ## 4. Tilgang for søkemotorer og AI-tjenester
 

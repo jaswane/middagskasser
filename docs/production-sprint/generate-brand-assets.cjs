@@ -64,13 +64,14 @@ function ico(images) {
     .png({ compressionLevel: 9 })
     .toBuffer();
 
-  // Next.js file-based icons: served with a content hash in the URL, so a
-  // changed icon gets a new URL and browsers cannot keep showing an old one.
+  // Advertised icons. app/layout.tsx links them at stable URLs (/icon.svg,
+  // /apple-icon.png, /favicon.ico); all three revalidate on every request.
+  // favicon.ico lives in public/: an app/favicon.ico would add a hashed link.
   fs.writeFileSync("app/icon.svg", favicon + "\n");
   fs.writeFileSync("app/apple-icon.png", touch);
   const sizes = [16, 32, 48];
   fs.writeFileSync(
-    "app/favicon.ico",
+    "public/favicon.ico",
     ico(
       await Promise.all(
         sizes.map(async (size) => ({ size, data: await png(favicon, size) })),
@@ -104,7 +105,7 @@ function ico(images) {
     .digest("hex")
     .slice(0, 8);
   console.log(
-    "Wrote app/favicon.ico, app/icon.svg, app/apple-icon.png, the public copies and og.png.",
+    "Wrote public/favicon.ico, app/icon.svg, app/apple-icon.png, the public copies and og.png.",
   );
   // Social networks cache the image per URL; tests/production.test.ts checks this value.
   console.log(`og.png version for lib/seo.ts: /og.png?v=${ogVersion}`);

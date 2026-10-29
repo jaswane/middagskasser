@@ -14,8 +14,17 @@ export const metadata: Metadata = {
   description:
     "Sammenlign HelloFresh og Godtlevert på samme kriterier. Se hva som er dokumentert, hva prisen gjelder, og hvilken matkasse som passer dere.",
   robots: { index: indexable, follow: indexable },
-  // Icons come from app/favicon.ico, app/icon.svg and app/apple-icon.png,
-  // which Next.js serves with a content hash in the URL.
+  // Stable icon URLs: Google wants a favicon URL that does not change, and the
+  // content hash Next.js adds to file-based icons changed with a Next upgrade.
+  // public/favicon.ico, app/icon.svg and app/apple-icon.png all revalidate on
+  // every request, so a changed icon still reaches browsers.
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+      { url: "/icon.svg", sizes: "any", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   openGraph: { locale: "nb_NO", siteName: "Middagskasser.no", type: "website" },
 };
 export default function RootLayout({
@@ -41,6 +50,7 @@ export default function RootLayout({
                   "@type": "WebSite",
                   "@id": "https://middagskasser.no/#website",
                   name: "Middagskasser.no",
+                  alternateName: ["Middagskasser", "middagskasser.no"],
                   url: "https://middagskasser.no/",
                   inLanguage: "nb-NO",
                   publisher: { "@id": "https://middagskasser.no/#publisher" },

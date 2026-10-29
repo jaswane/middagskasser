@@ -43,23 +43,16 @@ for (const path of routes) {
     /property="og:image" content="https:\/\/middagskasser.no\/og.png\?v=[0-9a-f]{8}"/,
     path,
   );
-  // Icons come only from file-based metadata, with a content hash in the URL.
+  // Exactly three icon links, at stable URLs without a hash query.
   const icons = [
     ...html.matchAll(
       /<link rel="(?:icon|apple-touch-icon|shortcut icon)"[^>]*href="([^"]+)"/g,
     ),
   ].map((m) => m[1].replaceAll("&amp;", "&"));
-  assert.ok(
-    icons.some((href) => /^\/icon\.svg\?/.test(href)),
-    `SVG icon: ${path}`,
-  );
-  assert.ok(
-    icons.some((href) => /^\/favicon\.ico/.test(href)),
-    `ICO: ${path}`,
-  );
-  assert.ok(
-    icons.some((href) => /^\/apple-icon\.png\?/.test(href)),
-    `Apple icon: ${path}`,
+  assert.deepEqual(
+    [...icons].sort(),
+    ["/apple-icon.png", "/favicon.ico", "/icon.svg"],
+    `Icons: ${path}`,
   );
   for (const old of [
     "/favicon.svg",

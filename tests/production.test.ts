@@ -309,17 +309,17 @@ test("sharing image URL is versioned by its content", () => {
   // Update lib/seo.ts whenever og.png changes, or social networks keep the old image.
   assert.equal(ogImage, `/og.png?v=${hash}`);
 });
-test("brand icons come from file-based metadata and share one symbol", () => {
+test("brand icons have stable URLs and share one symbol", () => {
   const read = (path: string) => readFileSync(new URL(path, import.meta.url));
   for (const path of [
-    "../app/favicon.ico",
+    "../public/favicon.ico",
     "../app/icon.svg",
     "../app/apple-icon.png",
   ])
     assert.ok(existsSync(new URL(path, import.meta.url)), path);
-  // A public/favicon.ico would compete with app/favicon.ico.
-  assert.ok(!existsSync(new URL("../public/favicon.ico", import.meta.url)));
-  assert.equal(read("../app/favicon.ico").readUInt16LE(2), 1);
+  // An app/favicon.ico would add a second, hashed favicon link.
+  assert.ok(!existsSync(new URL("../app/favicon.ico", import.meta.url)));
+  assert.equal(read("../public/favicon.ico").readUInt16LE(2), 1);
   // The unadvertised public copies must show the same icon.
   assert.deepEqual(read("../public/favicon.svg"), read("../app/icon.svg"));
   assert.deepEqual(
@@ -329,8 +329,10 @@ test("brand icons come from file-based metadata and share one symbol", () => {
   const svg = read("../app/icon.svg").toString();
   assert.equal((svg.match(/<path /g) || []).length, 4);
   assert.ok(!/<text/.test(svg), "no letter-based icon");
-  // layout.tsx must not advertise its own icon URLs next to the file-based ones.
-  assert.ok(!/icons\s*:/.test(read("../app/layout.tsx").toString()));
+  // layout.tsx advertises exactly these stable URLs, without a hash query.
+  const layout = read("../app/layout.tsx").toString();
+  for (const url of ["/favicon.ico", "/icon.svg", "/apple-icon.png"])
+    assert.ok(layout.includes(`url: "${url}"`), url);
 });
 test("all 72 selector combinations are deterministic and never assign two winners", () => {
   for (const people of [2, 3, 4, 5, 6, 7])
